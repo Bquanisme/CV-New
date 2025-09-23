@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation"; // ✅ App Router
 import header from "../assets/header.jpg";
+import HeaderBookingList from "./header.bookingList";
 
 const navItems = [
   { label: "Trang chủ", href: "/" },
@@ -33,7 +34,7 @@ const AppHeader = () => {
       <Box
         sx={{
           display: "flex",
-          justifyContent: "space-between",
+          justifyContent: "space-around",
           alignItems: "center",
           height: "100%",
         }}
@@ -52,7 +53,7 @@ const AppHeader = () => {
         {/* Navigation */}
         <Box sx={{ display: "flex", gap: 5 }}>
           {navItems.map((item) => {
-            const isActive = pathname === item.href; // kiểm tra link active
+            const isActive = pathname === item.href; // quan trọng, ktra link active
 
             return (
               <Link
@@ -65,9 +66,27 @@ const AppHeader = () => {
                     cursor: "pointer",
                     fontSize: "16px",
                     fontWeight: isActive ? 700 : 500,
-                    color: isActive ? "#90caf9" : "white",
-                    transition: "0.3s",
-                    "&:hover": { color: "#90caf9" },
+                    color: isActive ? "#ffb300" : "white", 
+                    position: "relative",
+                    paddingBottom: "4px",
+                    transition: "all 0.3s ease",
+                    "&:hover": { 
+                      color: "#90caf9" 
+                    },
+
+                    "&::after": {
+                      content: '""', //phần tử ảo
+                      position: "absolute",
+                      left: 0,
+                      bottom: 0,
+                      width: isActive ? "100%" : "0%",
+                      height: "2px",
+                      backgroundColor: "#ffb300",
+                      transition: "width 0.3s ease",
+                    },
+                    "&:hover::after": {
+                      width: "100%",
+                    },
                   }}
                 >
                   {item.label}
@@ -75,6 +94,10 @@ const AppHeader = () => {
               </Link>
             );
           })}
+        </Box>
+
+        <Box sx={{display: 'flex', gap: 2}}>
+          <HeaderBookingList />
         </Box>
       </Box>
     </Box>
