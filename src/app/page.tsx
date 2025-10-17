@@ -1,5 +1,5 @@
 'use client'
-import { Typography } from "@mui/material";
+import Typography from "@mui/material/Typography";
 import Banner from "../assets/Banner.jpg"
 import Box from '@mui/material/Box';
 import Image from "next/image"
@@ -7,6 +7,8 @@ import HomeDiscover from "./home.discover";
 import HotTour from "./hotTour";
 import HAR from '../assets/roomBanner.jpg'
 import HomeHotelAndResolt from "./home.hotelAndResolt";
+import HomeFood from "./home.food";
+import HomeEatingPlace from "./home.eatingPlace";
 
 
 export default function Home() {
@@ -89,6 +91,12 @@ export default function Home() {
         }}
         >
           <HomeHotelAndResolt />
+        </Box>
+        <Box>
+          <HomeFood />
+        </Box>
+        <Box>
+          <HomeEatingPlace />
         </Box>
       </Box>
     </Box>

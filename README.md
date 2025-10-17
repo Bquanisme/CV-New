@@ -46,3 +46,26 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+
+<!-- <Box
+        sx={{
+            position: "relative",
+            overflow: "hidden",
+            borderRadius: 2
+        }}
+> -->
+
+<!-- <Box
+    sx={{
+    position: "absolute",
+    bottom: 5 ,
+    left: 0,
+    width: "100%",
+    height: 47,
+    bgcolor: "#00000099 ", 
+    color: "white",
+    fontSize: 14,
+    borderBottomRightRadius: '10px',
+    borderBottomLeftRadius: '10px',
+    }}
+> -->

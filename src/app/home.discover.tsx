@@ -4,6 +4,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Image from 'next/image';
 import React from 'react';
+import { IHome } from '@/typescript/home';
 
 type IProps = {
   home?: IHome;
@@ -21,6 +22,7 @@ const HomeDiscover = (props: IProps) => {
           }}
         >
           <Image 
+            priority={false} 
             src={travel.image} 
             alt={travel.title} 
             width={312} 

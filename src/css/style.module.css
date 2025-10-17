@@ -1,0 +1,22 @@
+.linkTravel {
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  font-family: 'Inter';
+  font-size: 14px;
+}
+
+.linkTourism {
+  color: #E54141;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  font-family: 'Inter';
+  font-size: 14px;
+}
+
+.linkTravel .linkTourism :hover {
+  text-decoration: underline;
+}
+

@@ -1,8 +1,11 @@
 import "./globals.css";
 import { Inter } from "next/font/google";
-import AppHeader from "@/components/app.header";
 import AppFooter from "@/components/app.footer";
 import Providers from "./providers"; // tách QueryClientProvider ra đây
+import AppHeader from "@/components/app.header";
+import { ReduxProvider } from "./reduxProvider";
+import "react-toastify/dist/ReactToastify.css";
+import ToastProvider from "@/components/toastProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -15,11 +18,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className={inter.className}>
-        <AppHeader />
         <Providers>
-          {children}
+          <ReduxProvider>
+            <AppHeader />
+              {children}
+            <AppFooter />
+            <ToastProvider />
+          </ReduxProvider>
         </Providers>
-        <AppFooter />
       </body>
     </html>
   );

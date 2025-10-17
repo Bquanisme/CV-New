@@ -10,6 +10,7 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline';
 import FlagIcon from '@mui/icons-material/Flag';
 import DirectionsBoatIcon from '@mui/icons-material/DirectionsBoat';
+import { IHotTour } from '@/typescript/home';
 
 type IProps = {
   hotTour?: IHotTour
@@ -72,6 +73,7 @@ const HotTour = (props: IProps) => {
               src={item?.logo}
               alt={item?.name}
               fill
+              priority
               style={{ objectFit: 'cover' }}
             />
           </Box>
