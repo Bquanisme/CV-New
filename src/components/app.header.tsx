@@ -66,14 +66,10 @@ const AppHeader = () => {
       children: [
         { label: "Điểm du lịch", href: "/travel" },
         { label: "Nơi cư trú", href: "/hotel" },
-        { label: "Ăn uống", href: "/food" },
-        { label: "Giải trí", href: "/entertainment" },
       ],
     },
     { label: "Tour", href: "/tour" },
-    { label: "Thuê tàu xe", href: "/rent" },
     { label: "Tin tức", href: "/new" },
-    // Thêm sự kiện mở modal liên hệ
     { label: "Liên hệ", onClick: handleOpenContact },
   ];
 

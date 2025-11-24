@@ -1,16 +1,8 @@
 ## Các bước cần làm sau khi clone source code:
+
 ### 1. Cài đặt thư viện: npm i
-### 2. Chạy project: npm run dev   
 
-
-&nbsp;
-## Về tác giả: 
-### - Author Hỏi Dân IT :  https://www.youtube.com/@hoidanit
-&nbsp;
-### - Xem full series  Tự Học Next.JS Cơ Bản (với React và TypeScript) tại đây: https://www.youtube.com/playlist?list=PLncHg6Kn2JT6zw4JiFOE1z90ghnyrFl5B
-&nbsp;
-&nbsp;
-&nbsp;
+### 2. Chạy project: npm run dev
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
@@ -48,24 +40,14 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
 
 <!-- <Box
-        sx={{
-            position: "relative",
-            overflow: "hidden",
-            borderRadius: 2
-        }}
-> -->
-
-<!-- <Box
     sx={{
     position: "absolute",
-    bottom: 5 ,
+    bottom: 0 ,
     left: 0,
     width: "100%",
-    height: 47,
-    bgcolor: "#00000099 ", 
+    height: '100%',
+    bgcolor: "#5453536e ",
     color: "white",
     fontSize: 14,
-    borderBottomRightRadius: '10px',
-    borderBottomLeftRadius: '10px',
     }}
 > -->

@@ -1,56 +1,74 @@
-import * as React from 'react';
-import Box from '@mui/material/Box';
-import Badge from '@mui/material/Badge';
-import ButtonGroup from '@mui/material/ButtonGroup';
-import Button from '@mui/material/Button';
-import AddIcon from '@mui/icons-material/Add';
-import RemoveIcon from '@mui/icons-material/Remove';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import Switch from '@mui/material/Switch';
-import FormControlLabel from '@mui/material/FormControlLabel';
+"use client";
+import * as React from "react";
+import Box from "@mui/material/Box";
+import Badge from "@mui/material/Badge";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import { useQuery } from "@tanstack/react-query";
+import { fetchOrder } from "@/api/home/api.home";
+import { Tooltip } from "@mui/material";
+import { useRouter } from "next/navigation";
+import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
 export default function HeaderBookingList() {
-  const [count, setCount] = React.useState(1);
-  const [invisible, setInvisible] = React.useState(false);
+  const router = useRouter();
+  const user = useSelector((state: any) => state.auth.user);
+  const [count, setCount] = React.useState<number>(0);
 
-  const handleBadgeVisibility = () => {
-    setInvisible(!invisible);
-  };
+  const { data, refetch } = useQuery({
+    queryKey: ["orders", user?.id], // chỉ để react-query nhận biết khi user đổi
+    queryFn: () => fetchOrder(),
+    enabled: !!user,                // chỉ chạy khi có user
+    refetchOnReconnect: true,
+    refetchOnWindowFocus: true,
+  });
+
+  const handleCheckUser = () => {
+    if (!user) {
+      toast.error("Bạn cần đăng nhập để có thể vào giỏ hàng !!")
+    }
+    else {
+      router.push("/cart")
+    }
+  }
+
+  React.useEffect(() => {
+    if (data) {
+      const numberCount = (Array.isArray(data) ? data.length : data?.total) ?? 0;
+      setCount(numberCount);
+    } else {
+      setCount(0);
+    }
+  }, [data]);
 
   return (
     <Box
       sx={{
-        color: 'action.active',
-        display: 'flex',
-        flexDirection: 'column',
-        '& .MuiBadge-root': {
-          marginRight: 4,
-        },
+        color: "action.active",
+        display: "flex",
+        flexDirection: "column",
+        "& .MuiBadge-root": { marginRight: 4 },
       }}
     >
-      <div>
-        <Badge sx={{color: 'white'}} color="error" badgeContent={count}>
-          <ShoppingCartIcon />
+      <Tooltip title="Đơn đặt hàng của bạn">
+        <Badge
+          color="error"
+          badgeContent={count}
+          sx={{
+            color: "white",
+            "& .MuiBadge-badge": {
+              fontSize: "0.75rem",
+              minWidth: 18,
+              height: 18,
+            },
+          }}
+        >
+          <ShoppingCartIcon
+            sx={{ cursor: "pointer", color: "white" }}
+            onClick={handleCheckUser}
+          />
         </Badge>
-        {/* <ButtonGroup>
-          <Button
-            aria-label="reduce"
-            onClick={() => {
-              setCount(Math.max(count - 1, 0));
-            }}
-          >
-            <RemoveIcon fontSize="small" />
-          </Button>
-          <Button
-            aria-label="increase"
-            onClick={() => {
-              setCount(count + 1);
-            }}
-          >
-            <AddIcon fontSize="small" />
-          </Button>
-        </ButtonGroup> */}
-      </div>
+      </Tooltip>
     </Box>
   );
 }

@@ -23,12 +23,12 @@ import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import Image from "next/image";
 import LoginImage from "../assets/loginImage.jpg";
-import { login } from "@/redux/Slice/authSlice";
+import { admin, login } from "@/redux/Slice/authSlice";
 import { useAppDispatch } from "@/redux/hooks";
 import { toast } from "react-toastify";
-
-// Hiệu ứng mở modal trượt lên
 import { TransitionProps } from "@mui/material/transitions";
+import { useRouter } from "next/navigation";
+
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & { children: React.ReactElement },
   ref: React.Ref<unknown>
@@ -48,7 +48,6 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 type IProps = {
   open: boolean;
   handleClose: () => void;
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   handleClickOpenRegister: () => void;
 };
 
@@ -60,7 +59,7 @@ const LoginSchema = Yup.object().shape({
 export default function HomeLogin({ open, handleClose, handleClickOpenRegister }: IProps) {
   const [showPassword, setShowPassword] = React.useState(false);
   const dispatch = useAppDispatch();
-  // const router = useRouter();
+  const router = useRouter();
 
   return (
     <BootstrapDialog
@@ -122,32 +121,45 @@ export default function HomeLogin({ open, handleClose, handleClickOpenRegister }
                 initialValues={{ email: "", password: "" }}
                 validationSchema={LoginSchema}
                 onSubmit={async (values, { setSubmitting }) => {
-                try {
-                  const res = await dispatch(
-                    login({
-                      email: values.email,
-                      password: values.password,
-                      device_token: "xxx111xxx",
-                    })
-                  );
+                  try {
+                    let role: string | null = null;
+                    let res: any;
 
-                  if (login.fulfilled.match(res)) {
+                    // Xác định admin hoặc user dựa vào API
+                    if (values.email.startsWith("admin")) {
+                      res = await dispatch(admin({ email: values.email, password: values.password }));
+                      console.log("LocalStorage role:", localStorage.getItem("role"));
+                    } else {
+                      res = await dispatch(login({ email: values.email, password: values.password, device_token: "xxx111xxx" }));
+                      console.log("LocalStorage role:", localStorage.getItem("role"));
+                    }
+
+                    // Lấy role từ payload
+                    if (res && (res.payload?.role === "admin" || res.payload?.role === "user")) {
+                      role = res.payload.role;
+                    }
+
+                    if (!role) {
+                      toast.error("❌ Sai email hoặc mật khẩu", { theme: "colored" });
+                      return;
+                    }
+
+                    // Success toast + close modal
                     toast.success("🎉 Đăng nhập thành công!", { theme: "colored" });
-                    handleClose()
-                    // setTimeout(() => 
-                    //   router.replace('/')
-                    // , 1200);
-                  } else {
-                    toast.error(res.payload || "❌ Sai email hoặc mật khẩu", { theme: "colored" });
+                    handleClose();
+
+                    // Redirect theo role
+                    if (role === "admin") router.replace("/dashboard");
+                    else router.replace("/");
+
+                  } catch (err: any) {
+                    toast.error(err.message || "Có lỗi xảy ra!", { theme: "colored" });
+                  } finally {
+                    setSubmitting(false);
                   }
-                } catch (err: any) {
-                  toast.error(err.message || "Có lỗi xảy ra!", { theme: "colored" });
-                } finally {
-                  setSubmitting(false);
-                }
-              }}
+                }}
               >
-                {({ errors, touched, handleChange, values }) => (
+                {({ errors, touched, handleChange, values, isSubmitting }) => (
                   <Form>
                     {/* Email */}
                     <Field
@@ -190,6 +202,7 @@ export default function HomeLogin({ open, handleClose, handleClickOpenRegister }
                       fullWidth
                       variant="contained"
                       type="submit"
+                      disabled={isSubmitting}
                       sx={{
                         bgcolor: "#1C5C80",
                         color: "white",
@@ -206,21 +219,12 @@ export default function HomeLogin({ open, handleClose, handleClickOpenRegister }
                         },
                       }}
                     >
-                      Đăng nhập
+                      {isSubmitting ? "Đang đăng nhập..." : "Đăng nhập"}
                     </Button>
 
-                    <Box
-                      sx={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        mt: 1,
-                      }}
-                    >
+                    <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mt: 1 }}>
                       <FormControlLabel control={<Checkbox name="remember" />} label="Nhớ mật khẩu" />
-                      <Typography
-                        sx={{ fontSize: 14, color: "#1C5C80", cursor: "pointer" }}
-                      >
+                      <Typography sx={{ fontSize: 14, color: "#1C5C80", cursor: "pointer" }}>
                         Quên mật khẩu?
                       </Typography>
                     </Box>
@@ -230,17 +234,14 @@ export default function HomeLogin({ open, handleClose, handleClickOpenRegister }
                       <Typography sx={{ fontSize: 14 }}>
                         Chưa có tài khoản?{" "}
                         <span
-                        onClick={() => {
-                          handleClickOpenRegister() 
-                          handleClose()
-                          }
-                        }
+                          onClick={() => {
+                            handleClickOpenRegister();
+                            handleClose();
+                          }}
                           style={{
                             color: "#1C5C80",
-                            textTransform: "none",
-                            textDecoration: "none",
                             fontWeight: 600,
-                            cursor: 'pointer'
+                            cursor: "pointer",
                           }}
                         >
                           Đăng ký
@@ -269,14 +270,13 @@ export default function HomeLogin({ open, handleClose, handleClickOpenRegister }
             alt="Login"
             fill
             priority
-            sizes="(max-width: 768px) 100vw, 50vw" //media + destop
+            sizes="(max-width: 768px) 100vw, 50vw"
             style={{
               objectFit: "cover",
               filter: "brightness(0.8)",
               transition: "transform 0.8s ease",
             }}
           />
-
 
           <IconButton
             aria-label="close"
@@ -287,9 +287,7 @@ export default function HomeLogin({ open, handleClose, handleClickOpenRegister }
               top: 16,
               color: theme.palette.grey[100],
               backgroundColor: "rgba(0,0,0,0.4)",
-              "&:hover": {
-                backgroundColor: "rgba(0,0,0,0.6)",
-              },
+              "&:hover": { backgroundColor: "rgba(0,0,0,0.6)" },
             })}
           >
             <CloseIcon />

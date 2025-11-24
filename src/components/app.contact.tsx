@@ -8,8 +8,8 @@ import {
   Box,
   Slide,
 } from "@mui/material";
-import { styled } from "@mui/material/styles";
-import CloseIcon from "@mui/icons-material/Close";
+  import { styled } from "@mui/material/styles";
+  import CloseIcon from "@mui/icons-material/Close";
 import Image from "next/image";
 import ContactImage from "../assets/contact.jpg";
 import PhoneInTalkIcon from '@mui/icons-material/PhoneInTalk';
@@ -45,8 +45,7 @@ export default function AppContact({ contact, handleCloseContact }: IProps) {
       open={contact}
       TransitionComponent={Transition}
       keepMounted
-      onClose={(event, reason) => {
-        if (reason === "backdropClick") return;
+      onClose={() => {
         handleCloseContact();
       }}
       disableEscapeKeyDown

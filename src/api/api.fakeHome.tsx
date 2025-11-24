@@ -27,6 +27,14 @@ import hotTravel1 from "../assets/hotTour1.jpg"
 import hotTravel2 from "../assets/hotTour2.jpg"
 import hotTravel3 from "../assets/hotTour3.jpg"
 import hotTravel4 from "../assets/hotTour4.jpg"
+import hotel1 from "../assets/hotel1.jpg"
+import hotel2 from "../assets/hotel2.jpg"
+import hotel3 from "../assets/hotel3.jpg"
+import hotel4 from "../assets/hotel4.jpg"
+import tour1 from "../assets/tour1.jpg"
+import tour2 from "../assets/tour2.jpg"
+import tour3 from "../assets/tour3.jpg"
+import tour4 from "../assets/tour4.jpg"
 
 const ApiFakeHome = {
   cards: [
@@ -45,7 +53,7 @@ const ApiFakeHome = {
     {
       id: 3,
       title: 'Chùa Ốc Từ Vân',
-      tour: "Cam Lập, Cam Ranh, Khánh Hòa", 
+      tour: "Cam Lập, Cam Ranh, Khánh Hòa",
       image: card3,
     },
     {
@@ -103,7 +111,7 @@ const ApiFakeHome = {
     {
       id: 3,
       title: 'Nhà hàng Akira Sushi',
-      tour: "Công Viên Bốn Mùa, Trần Phú", 
+      tour: "Công Viên Bốn Mùa, Trần Phú",
       description: "Akira phục vụ Buffet chuẩn Nhật trong không gian ẩm thực Nhật Bản đẳng cấp giữa lòng phố biển Nha Trang. Nguồn nguyên liệu tươi sống được nhập khẩu.",
       image: place3,
     },
@@ -189,6 +197,42 @@ const ApiFakeHome = {
       title: 'Làng nghề Mỹ Trạch',
       tour: "Cam Lập, Cam Ranh, Khánh Hòa",
       image: hotTravel4,
+    },
+  ],
+  imageHotel: [
+    {
+      id: 1,
+      image: hotel1,
+    },
+    {
+      id: 2,
+      image: hotel2,
+    },
+    {
+      id: 3,
+      image: hotel3,
+    },
+    {
+      id: 4,
+      image: hotel4,
+    },
+  ],
+  imageTour: [
+    {
+      id: 1,
+      image: tour1,
+    },
+    {
+      id: 2,
+      image: tour2,
+    },
+    {
+      id: 3,
+      image: tour3,
+    },
+    {
+      id: 4,
+      image: tour4,
     },
   ],
 };

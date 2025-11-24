@@ -3,10 +3,12 @@ import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import authReducer from "./Slice/authSlice";
+import userReducer from "./Slice/userSlice";
 
 // Gộp reducer
 const rootReducer = combineReducers({
   auth: authReducer,
+  user: userReducer,
 });
 
 // Cấu hình redux-persist
