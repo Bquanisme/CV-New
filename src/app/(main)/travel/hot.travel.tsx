@@ -19,6 +19,7 @@ const HotTravel = (props: IProps) => {
             display: 'flex',
             justifyContent: 'center',
             gap: 3.5,
+            flexWrap: 'wrap'
         }}>
             {ApiFakeHome?.hotTravel.map(place => (
                 <Box

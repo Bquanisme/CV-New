@@ -1,7 +1,7 @@
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import React from "react";
-import { RoomIdBreadcrumbs } from "@/components/breadcrumbs";
+import { RoomIdBreadcrumbs } from "@/components/otherComponents/breadcrumbs";
 import Image from "next/image";
 import Banner from "../../../../../assets/RoomDetailBanner.jpg";
 import { useQuery } from "@tanstack/react-query";
@@ -17,7 +17,7 @@ import Introduce from "@/components/detailComponents/introduce";
 import TicketPrice from "@/components/detailComponents/ticketPrice";
 import PictureRoom from "@/components/detailComponents/pictureRoom";
 import BoxContactRoom from "@/components/detailComponents/boxContactRoom";
-import EvaluateAndComment from "@/components/evaluateAndComment";
+import EvaluateAndComment from "@/components/detailComponents/evaluateAndComment";
 import RoomImage from "../../../../../assets/room14.jpg";
 
 type IProps = {
@@ -36,135 +36,121 @@ const DetailRoom = ({ id }: IProps) => {
 
   if (error) return <p>Lỗi: {(error as Error).message}</p>;
 
+  const menuItems = [
+    { icon: <ClassIcon />, text: "Giới thiệu", id: "introduce" },
+    { icon: <ClassIcon />, text: "Giá vé", id: "price" },
+    { icon: <PhotoIcon />, text: "Hình ảnh", id: "gallery" },
+    { icon: <StarIcon />, text: "Đánh giá & Bình luận", id: "review" },
+    { icon: <MapIcon />, text: "Bản đồ", id: "map" },
+  ];
+
+  const scrollToSection = (sectionId: string) => {
+    const el = document.getElementById(sectionId);
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
   return (
-    <Box
-      sx={{
-        bgcolor: "#f4f0f0ff",
-        overflowX: "hidden",
-        width: "100vw",
-        maxWidth: "100%",
-        boxSizing: "border-box",
-      }}
-    >
-      {/* Banner */}
-      <Box sx={{ position: "relative", width: "100%", height: "382px" }}>
+    <Box sx={{
+      bgcolor: "#f4f0f0ff",
+      overflowX: "hidden",
+      width: "100vw",
+      maxWidth: "100%",
+      boxSizing: "border-box",
+    }}>
+      <Box
+        sx={{
+          position: "relative",
+          width: "100%",
+          height: { xs: 260, md: 382 },
+        }}
+      >
         <Image
-          priority={false}
           src={Banner}
           alt="Header"
           fill
           style={{
-            objectFit: "cover",       // giữ tỉ lệ, lấp kín box
-            objectPosition: "center", // lấy tâm ảnh làm trung tâm
-            // transform: "scale(1.2)",  // phóng to 1.2 lần
-            transition: "transform 0.3s ease",
+            objectFit: "cover",
+            objectPosition: "center",
           }}
         />
+
         <Box
           sx={{
             position: "absolute",
-            bottom: 0,
-            left: 0,
-            width: "100%",
-            height: '100%',
-            bgcolor: "#5453536e ",
-            color: "white",
-            fontSize: 14,
+            inset: 0,
+            background:
+              "linear-gradient(to bottom, rgba(0,0,0,0.25), rgba(0,0,0,0.45))",
+            pointerEvents: "none",
           }}
-        >
+        />
 
-          {/* Breadcrumb */}
-          <Box
-            sx={{
-              position: "absolute",
-              top: 10,
-              left: "15%",
-              color: "white",
-              display: "flex",
-              flexDirection: "column",
-            }}
-          >
-            <RoomIdBreadcrumbs id={id} data={data} />
-          </Box>
+        <Box sx={{ position: "absolute", top: 12, left: { xs: 16, md: "15%" } }}>
+          <RoomIdBreadcrumbs id={id} data={data} />
         </Box>
 
         <Box
           sx={{
             position: "absolute",
-            bottom: -190,
-            left: "15%",
-            right: "9%",
+            bottom: { xs: -180, md: -170 },
+            left: { xs: 16, md: "15%" },
+            right: { xs: 16, md: "9%" },
             display: "flex",
-            justifyContent: "space-between",
-            alignItems: "flex-end",
-            gap: 4,
+            flexDirection: { xs: "column", md: "row" },
+            gap: 3,
+            alignItems: { xs: "flex-start", md: "flex-end" },
           }}
         >
           <Image
-            priority={false}
             src={data?.logo || RoomImage}
             alt="Logo"
-            width={224}
-            height={224}
+            width={230}
+            height={230}
             style={{
               objectFit: "cover",
-              borderRadius: "10px",
-              boxShadow: "0 4px 15px rgba(0,0,0,0.1)",
+              borderRadius: 10,
+              boxShadow: "0 4px 15px rgba(0,0,0,0.15)",
             }}
           />
 
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "flex-end",
-              flex: 1,
-              minWidth: 0,
-            }}
-          >
+          <Box sx={{ flex: 1 }}>
             <Typography
               sx={{
                 fontWeight: 600,
-                fontSize: "35px",
+                fontSize: { xs: 22, sm: 22, md: 24, lg: 30 },
                 color: "#E54141",
                 fontFamily: "SVN-Gilroy",
-                width: '70%'
+
+                maxWidth: {
+                  xs: "100%",
+                  sm: "100%",
+                  md: "100%",
+                  lg: "65%",
+                },
+
+                display: "-webkit-box",
+                WebkitLineClamp: { xs: 2, sm: 2, md: 2, lg: 3 },
+                WebkitBoxOrient: "vertical",
+                overflow: "hidden",
+                lineHeight: 1.25,
               }}
             >
               {data?.name}
             </Typography>
 
-            <Box sx={{ display: "flex", gap: 2, mt: 2, flexWrap: "wrap" }}>
-              <Rating value={5} readOnly size="medium" />
-              <Typography
-                color="error"
-                fontSize="16px"
-                sx={{ fontWeight: 600, fontFamily: "Inter" }}
-              >
-                Đánh giá: 4.4 Rất tốt
+
+            <Box sx={{ display: "flex", gap: 2, mt: 1.5, flexWrap: "wrap" }}>
+              <Rating value={5} readOnly />
+              <Typography color="error" fontWeight={600}>
+                4.4 Rất tốt
               </Typography>
-              <Typography
-                color="#3C3C3C"
-                fontSize="16px"
-                sx={{ fontWeight: 600, fontFamily: "Inter" }}
-              >
-                (1.27k đánh giá)
-              </Typography>
+              <Typography color="#3C3C3C">(1.27k đánh giá)</Typography>
             </Box>
 
-            <Box sx={{ display: "flex", gap: 1.5, alignItems: "center", mt: 1.5 }}>
+            <Box sx={{ display: "flex", gap: 1, mt: 1 }}>
               <LocationPinIcon color="primary" />
-              <Typography
-                sx={{
-                  fontWeight: 500,
-                  fontSize: "16px",
-                  color: "#4475F2",
-                  fontFamily: "Inter",
-                  whiteSpace: "nowrap",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                }}
-              >
+              <Typography color="#4475F2">
                 Số 1, Cầu Đá, Nha Trang, Khánh Hòa
               </Typography>
             </Box>
@@ -172,71 +158,91 @@ const DetailRoom = ({ id }: IProps) => {
         </Box>
       </Box>
 
-      {/* Content */}
       <Box
         sx={{
-          my: 30,
-          px: "15%",
+          mt: { xs: 22, md: 30 },
+          px: { xs: 2, md: "15%" },
           display: "flex",
-          justifyContent: "space-between",
-          alignItems: "flex-start",
-          flexWrap: "nowrap",
-          gap: "4%",
-          boxSizing: "border-box",
+          flexDirection: { xs: "column", md: "row" },
+          gap: { xs: 4, md: "4%" },
         }}
       >
-        {/* Sidebar trái */}
         <Box
           sx={{
             flex: "0 0 180px",
             display: "flex",
-            flexDirection: "column",
-            gap: 3,
+            flexDirection: { xs: "row", md: "column" },
+            gap: 2,
+            overflowX: { xs: "auto", md: "unset" },
+            position: { md: "sticky" },
+            top: { md: 120 },
+            whiteSpace: "nowrap",
           }}
         >
-          {[
-            { icon: <ClassIcon />, text: "Giới thiệu" },
-            { icon: <ClassIcon />, text: "Giá vé" },
-            { icon: <PhotoIcon />, text: "Hình ảnh" },
-            { icon: <StarIcon />, text: "Đánh giá & Bình luận" },
-            { icon: <MapIcon />, text: "Bản đồ" },
-          ].map((item, i) => (
-            <Box key={i} sx={{ display: "flex", gap: 1.5, alignItems: "center" }}>
+          {menuItems.map((item) => (
+            <Box
+              key={item.id}
+              onClick={() => scrollToSection(item.id)}
+              sx={{
+                display: "flex",
+                gap: 1,
+                alignItems: "center",
+                cursor: "pointer",
+                "&:hover": { color: "#4475F2" },
+              }}
+            >
               {item.icon}
-              <Typography
-                sx={{
-                  fontWeight: 500,
-                  fontSize: "16px",
-                  color: "#343434",
-                  fontFamily: "Inter",
-                }}
-              >
-                {item.text}
-              </Typography>
+              <Typography fontWeight={500}>{item.text}</Typography>
             </Box>
           ))}
         </Box>
 
-        {/* Nội dung giữa */}
-        <Box sx={{ flex: "1 1 60%", maxWidth: "60%" }}>
-          <Introduce data={data} />
-          <Box mt={4}>
+        <Box sx={{ flex: 1 }}>
+          <Box id="introduce">
+            <Introduce data={data} />
+          </Box>
+
+          <Box id="price" mt={4}>
             <TicketPrice data={data} />
           </Box>
-          <Box mt={8}>
+
+          <Box id="gallery" mt={8}>
             <PictureRoom data={data} />
           </Box>
-          <Box mt={8}>
+
+          <Box id="review" mt={8}>
             <EvaluateAndComment id={id} />
+          </Box>
+
+          <Box id="map" mt={8}>
+
           </Box>
         </Box>
 
-        {/* Box liên hệ phải */}
-        <Box sx={{ flex: "0 0 280px" }}>
-          <BoxContactRoom id={id}/>
+        <Box
+          sx={{
+            flexShrink: 0,
+
+            width: {
+              xs: "100%",
+              sm: "100%",
+              md: 360,   // ⬅️ tablet
+              lg: 420,   // desktop
+            },
+
+            position: {
+              xs: "static",
+              sm: "static",
+              md: "sticky",
+            },
+
+            top: { md: 120 },
+          }}
+        >
+          <BoxContactRoom id={id} />
         </Box>
       </Box>
-    </Box>
+    </Box >
   );
 };
 

@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useState } from 'react';
 import {
     Box,
     Typography,
@@ -11,189 +11,273 @@ import {
     ListItemIcon,
     ListItemText,
     Divider,
+    Collapse,
+    IconButton,
+    useMediaQuery,
 } from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline';
 import ListAltIcon from '@mui/icons-material/ListAlt';
 import PaidIcon from '@mui/icons-material/Paid';
 import LogoutIcon from '@mui/icons-material/Logout';
+import ExpandLess from '@mui/icons-material/ExpandLess';
+import ExpandMore from '@mui/icons-material/ExpandMore';
+import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import logo from '../../assets/avatarLogo.jpg';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
-import { AdminBreadcrumbs } from '@/components/breadcrumbs';
 import { logout } from '@/redux/Slice/authSlice';
 import { toast } from 'react-toastify';
 
-const drawerWidth = 360;
+const drawerWidth = 320;
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
-    const { admin } = useAppSelector((state) => state.auth);
-    const dispatch = useAppDispatch();
     const router = useRouter();
+    const dispatch = useAppDispatch();
+    const { admin } = useAppSelector((state) => state.auth);
 
-    const menuItems = [
-        {
-            title: 'Admin',
-            items: [
-                { text: 'Dashboard', icon: <DashboardIcon />, href: '/dashboard' },
-                { text: 'Customer', icon: <PeopleOutlineIcon />, href: '/customer' },
-                { text: 'Staff', icon: <PeopleOutlineIcon />, href: '/staff' },
-                { text: 'Category', icon: <ListAltIcon />, href: '/category' },
-                { text: 'Manage Tour', icon: <ListAltIcon />, href: '/manageTour' },
-                { text: 'Cancel Request', icon: <ListAltIcon />, href: '/cancelRequest' },
-                { text: 'Manage Orders', icon: <PaidIcon />, href: '/manageOrders' },
-            ],
-        },
-    ];
+    // Responsive flag
+    const isMobile = useMediaQuery("(max-width:1024px)");
+
+    // Drawer open state
+    const [mobileOpen, setMobileOpen] = useState(false);
+    const handleDrawerToggle = () => {
+        setMobileOpen((prev) => !prev);
+    };
+
+    // Submenu toggles
+    const [openUsers, setOpenUsers] = useState(false);
 
     const handleLogout = async () => {
         await dispatch(logout());
         router.push('/');
         toast.success('Bạn đã đăng xuất thành công!');
-    }
+    };
 
-    return (
-        <Box
-            sx={{
-                display: "flex",
-                bgcolor: '#f8f9fb',
-                minHeight: "100vh", //phủ toàn màn hình
-            }}
-        >
-            <Drawer
-                variant="permanent"
-                sx={{
-                    width: drawerWidth,
-                    flexShrink: 0,
-                    [`& .MuiDrawer-paper`]: {
-                        width: drawerWidth,
-                        boxSizing: 'border-box',
-                        backgroundColor: '#fff',
-                        borderRight: '1px solid #eee',
-                    },
-                }}
+    const drawerContent = (
+        <Box sx={{ px: 2 }}>
+            <Toolbar />
+
+            <Typography
+                variant="h6"
+                textAlign="center"
+                fontFamily="Inter"
+                fontWeight={600}
+                mb={3}
             >
-                <Toolbar />
-                <Box sx={{ px: 2, pt: 0 }}>
-                    {menuItems.map((section, index) => (
-                        <Box key={index}>
-                            <Typography
-                                variant="h6"
-                                fontWeight={500}
-                                fontSize="18px"
-                                fontFamily="Inter"
-                                textAlign='center'
-                                my={2}
-                                ml={2}
-                            >
-                                {section.title}
-                            </Typography>
-                            <List>
-                                {section.items.map((item) => {
-                                    const isActive = pathname === item.href;
-                                    return (
-                                        <ListItem disablePadding key={item.text}>
-                                            <ListItemButton
-                                                component={Link}
-                                                href={item.href}
-                                                selected={isActive}
-                                                sx={{
-                                                    borderRadius: 2,
-                                                    mx: 1,
-                                                    my: 0.3,
-                                                    '&:hover': {
-                                                        backgroundColor: 'rgba(25,118,210,0.08)',
-                                                        transform: 'translateX(3px)',
-                                                        transition: '0.25s',
-                                                    },
-                                                    ...(isActive && {
-                                                        backgroundColor: 'rgba(25,118,210,0.12)',
-                                                        fontWeight: 600,
-                                                    }),
-                                                }}
-                                            >
-                                                <ListItemIcon
-                                                    sx={{
-                                                        color: isActive ? 'primary.main' : 'text.secondary',
-                                                        minWidth: 40,
-                                                    }}
-                                                >
-                                                    {item.icon}
-                                                </ListItemIcon>
-                                                <ListItemText
-                                                    primary={item.text}
-                                                    sx={{
-                                                        fontWeight: isActive ? 600 : 400,
-                                                        color: isActive ? 'primary.main' : 'text.primary',
-                                                    }}
-                                                />
-                                            </ListItemButton>
-                                        </ListItem>
-                                    );
-                                })}
-                            </List>
-                            {index < menuItems.length - 1 && <Divider sx={{ my: 2 }} />}
-                        </Box>
-                    ))}
+                Admin
+            </Typography>
 
-                    <Divider sx={{ my: 2 }} />
-                    <List>
+            <List>
+
+                <ListItem disablePadding>
+                    <ListItemButton
+                        component={Link}
+                        href="/dashboard"
+                        selected={pathname === "/dashboard"}
+                        sx={{ borderRadius: 2, mx: 1, my: 0.4 }}
+                    >
+                        <ListItemIcon>
+                            <DashboardIcon color={pathname === "/dashboard" ? "primary" : "inherit"} />
+                        </ListItemIcon>
+                        <ListItemText primary="Dashboard" />
+                    </ListItemButton>
+                </ListItem>
+
+                <ListItem disablePadding>
+                    <ListItemButton
+                        onClick={() => setOpenUsers(prev => !prev)}
+                        sx={{ borderRadius: 2, mx: 1, my: 0.4 }}
+                    >
+                        <ListItemIcon>
+                            <PersonOutlineIcon color={openUsers ? "primary" : "inherit"} />
+                        </ListItemIcon>
+                        <ListItemText primary="Manage Users" />
+                        {openUsers ? <ExpandLess /> : <ExpandMore />}
+                    </ListItemButton>
+                </ListItem>
+
+                <Collapse in={openUsers} timeout="auto" unmountOnExit>
+                    <List sx={{ ml: 4 }}>
                         <ListItem disablePadding>
                             <ListItemButton
-                                sx={{
-                                    mx: 1,
-                                    borderRadius: 2,
-                                    '&:hover': {
-                                        backgroundColor: 'rgba(244,67,54,0.1)',
-                                        transition: '0.25s',
-                                    },
-                                }}
+                                component={Link}
+                                href="/customer"
+                                selected={pathname === "/customer"}
+                                sx={{ borderRadius: 2, my: 0.4 }}
                             >
-                                <ListItemIcon>
-                                    <LogoutIcon color="error" />
-                                </ListItemIcon>
-                                <ListItemText
-                                    primary="Đăng xuất"
-                                    primaryTypographyProps={{ color: 'error.main', fontWeight: 500 }}
-                                    onClick={handleLogout}
-                                />
+                                <ListItemIcon><PeopleOutlineIcon /></ListItemIcon>
+                                <ListItemText primary="Customer" />
+                            </ListItemButton>
+                        </ListItem>
+
+                        <ListItem disablePadding>
+                            <ListItemButton
+                                component={Link}
+                                href="/staff"
+                                selected={pathname === "/staff"}
+                                sx={{ borderRadius: 2, my: 0.4 }}
+                            >
+                                <ListItemIcon><PeopleOutlineIcon /></ListItemIcon>
+                                <ListItemText primary="Staff" />
                             </ListItemButton>
                         </ListItem>
                     </List>
-                </Box>
-            </Drawer>
+                </Collapse>
 
-            {/* --- Nội dung chính --- */}
-            <Box component="main" sx={{ flexGrow: 1, p: 4 }}>
-                {/* Header */}
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <AdminBreadcrumbs pathname={pathname} />
-                    {admin?.display_name && (
-                        <Box
-                            sx={{ display: 'flex', alignItems: 'center', gap: 2, cursor: 'pointer' }}
-                        >
-                            <Image
-                                src={admin?.avatar || logo}
-                                alt="User"
-                                width={38}
-                                height={38}
-                                style={{ borderRadius: '50%', objectFit: 'cover' }}
-                            />
-                            <Typography sx={{ fontFamily: 'SVN-Gilroy', fontWeight: 600, fontSize: '16px' }}>
-                                {admin?.display_name}
-                            </Typography>
-                        </Box>
-                    )}
-                </Box>
+                {/* CATEGORY */}
+                <ListItem disablePadding>
+                    <ListItemButton
+                        component={Link}
+                        href="/category"
+                        selected={pathname === "/category"}
+                        sx={{ borderRadius: 2, mx: 1, my: 0.4 }}
+                    >
+                        <ListItemIcon><ListAltIcon /></ListItemIcon>
+                        <ListItemText primary="Category" />
+                    </ListItemButton>
+                </ListItem>
 
+                {/* MANAGE TOUR */}
+                <ListItem disablePadding>
+                    <ListItemButton
+                        component={Link}
+                        href="/manageTour"
+                        selected={pathname === "/manageTour"}
+                        sx={{ borderRadius: 2, mx: 1, my: 0.4 }}
+                    >
+                        <ListItemIcon><ListAltIcon /></ListItemIcon>
+                        <ListItemText primary="Manage Tour" />
+                    </ListItemButton>
+                </ListItem>
+
+                <ListItem disablePadding>
+                    <ListItemButton
+                        component={Link}
+                        href="/cancelRequest"
+                        selected={pathname === "/cancelRequest"}
+                        sx={{ borderRadius: 2, mx: 1, my: 0.4 }}
+                    >
+                        <ListItemIcon><ListAltIcon /></ListItemIcon>
+                        <ListItemText primary="Cancel Request" />
+                    </ListItemButton>
+                </ListItem>
+
+                <ListItem disablePadding>
+                    <ListItemButton
+                        component={Link}
+                        href="/manageOrders"
+                        selected={pathname === "/manageOrders"}
+                        sx={{ borderRadius: 2, mx: 1, my: 0.4 }}
+                    >
+                        <ListItemIcon><PaidIcon /></ListItemIcon>
+                        <ListItemText primary="Manage Orders" />
+                    </ListItemButton>
+                </ListItem>
+
+            </List>
+
+            <Divider sx={{ my: 3 }} />
+
+            {/* LOGOUT */}
+            <List>
+                <ListItem disablePadding>
+                    <ListItemButton
+                        onClick={handleLogout}
+                        sx={{
+                            mx: 1,
+                            borderRadius: 2,
+                            "&:hover": { backgroundColor: "rgba(244,67,54,0.1)" },
+                        }}
+                    >
+                        <ListItemIcon><LogoutIcon color="error" /></ListItemIcon>
+                        <ListItemText primary="Đăng xuất" sx={{ color: "error.main" }} />
+                    </ListItemButton>
+                </ListItem>
+            </List>
+
+        </Box>
+    );
+
+    return (
+        <Box sx={{ display: "flex", bgcolor: "#f8f9fb", minHeight: "100vh" }}>
+
+            {isMobile && (
+                <Drawer
+                    variant="temporary"
+                    open={mobileOpen}
+                    onClose={handleDrawerToggle}
+                    ModalProps={{ keepMounted: true }}
+                    sx={{
+                        "& .MuiDrawer-paper": {
+                            width: drawerWidth,
+                        },
+                    }}
+                >
+                    {drawerContent}
+                </Drawer>
+            )}
+
+
+            {!isMobile && (
+                <Drawer
+                    variant="permanent"
+                    sx={{
+                        width: drawerWidth,
+                        flexShrink: 0,
+                        "& .MuiDrawer-paper": {
+                            width: drawerWidth,
+                            boxSizing: "border-box",
+                        },
+                    }}
+                >
+                    {drawerContent}
+                </Drawer>
+            )}
+
+            <Box component="main" sx={{ flexGrow: 1, p: 3, }}>
+
+                {isMobile && (
+                    <IconButton onClick={handleDrawerToggle}>
+                        <MenuIcon />
+                    </IconButton>
+                )}
+                {/* HEADER */}
+                <Box
+                    sx={{
+                        display: "flex",
+                        justifyContent: "right",
+                        alignItems: "center",
+                        mb: 2,
+                    }}
+                >
+                    {/* {isMobile && (
+                        <IconButton onClick={handleDrawerToggle}>
+                            <MenuIcon />
+                        </IconButton>
+                    )} */}
+
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                        <Image
+                            src={admin?.avatar || logo}
+                            alt="avatar"
+                            width={38}
+                            height={38}
+                            style={{ borderRadius: "50%", objectFit: "cover" }}
+                        />
+                        <Typography sx={{ fontWeight: 600 }}>
+                            {admin?.display_name}
+                        </Typography>
+                    </Box>
+                </Box>
                 <Divider sx={{ my: 3 }} />
-
-                {/* Nội dung trang */}
                 {children}
             </Box>
+
         </Box>
     );
 }

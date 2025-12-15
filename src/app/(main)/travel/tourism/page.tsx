@@ -3,7 +3,7 @@ import React, { useState, useMemo } from 'react';
 import Banner from "../../../../assets/travelBanner.jpg";
 import Box from '@mui/material/Box';
 import Image from "next/image";
-import { TourismBreadcrumbs } from '@/components/breadcrumbs';
+import { TourismBreadcrumbs } from '@/components/otherComponents/breadcrumbs';
 import TourismTicket from '@/components/tourismComponents/tourism.ticket';
 import TourismSaleSlice from '@/components/tourismComponents/tourism.saleSlice';
 import { fetchTourism } from '@/api/home/api.home';
@@ -25,7 +25,7 @@ const Tourism = () => {
   const [filteredByType, setFilteredByType] = useState<IHotTour[] | null>(null);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const [page, setPage] = useState<number>(1);
-  const rowsPerPage : number = 9;
+  const rowsPerPage: number = 9;
 
 
   const filteredTours = useMemo(() => {
@@ -56,14 +56,14 @@ const Tourism = () => {
     result = [...result].sort((a, b) =>
       sortOrder === "asc" ? a.cost - b.cost : b.cost - a.cost
     );
-  return result;
+    return result;
   }, [data, filteredByPrice, filteredByType, sortOrder]);
 
   const totalPages = Math.ceil(filteredTours.length / rowsPerPage);
-    const paginatedTours = filteredTours.slice(
-      (page - 1) * rowsPerPage,
-      page * rowsPerPage
-    );
+  const paginatedTours = filteredTours.slice(
+    (page - 1) * rowsPerPage,
+    page * rowsPerPage
+  );
 
   const noResults =
     !isLoading &&
@@ -73,29 +73,60 @@ const Tourism = () => {
     (filteredByPrice !== null || filteredByType !== null);
 
   return (
-    <Box sx={{ bgcolor: '#fff', display: 'flex', flexDirection: 'column', gap: 3 }}>
+    <Box
+      sx={{
+        bgcolor: '#fff',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: { xs: 2, md: 3 },
+      }}
+    >
       {/* Banner */}
-      <Box sx={{ position: "relative", width: "100%", height: "382px" }}>
+      <Box
+        sx={{
+          position: 'relative',
+          width: '100%',
+          height: { xs: 220, sm: 300, md: 382 },
+        }}
+      >
         <Image
           priority={false}
           src={Banner}
           alt="Header"
           fill
-          style={{ objectFit: 'cover', transform: "scaleX(-1)", }}
+          style={{ objectFit: 'cover', transform: 'scaleX(-1)' }}
           sizes="100vw"
         />
       </Box>
 
-      <Box sx={{ px: 20 }}>
+      <Box sx={{ px: { xs: 2, sm: 4, md: 20 } }}>
         <TourismBreadcrumbs />
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', pt: 5 }}>
-          {/* Bộ lọc */}
-          <Box>
+
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: { xs: 'column', md: 'row' },
+            gap: { xs: 3, md: 0 },
+            pt: { xs: 3, md: 5 },
+          }}
+        >
+          <Box
+            sx={{
+              width: { xs: '100%', sm: '100%', md: 280 },
+              display: 'flex',
+              flexDirection: { xs: 'row', sm: 'row', md: 'column' },
+              gap: { xs: 2, md: 0 },
+              border: { xs: '1px solid #eee', sm: '1px solid #eee', md: 'none' },
+              borderRadius: 2,
+              p: { xs: 2, sm: 2, md: 0 },
+            }}
+          >
             <TourismSaleSlice
               data={data || []}
               onFilterChange={setFilteredByPrice}
             />
-            <Box sx={{ py: 2 }}>
+
+            <Box sx={{ py: { xs: 0, md: 2 } }}>
               <TourismTypeTour
                 data={data || []}
                 onFilterChange={setFilteredByType}
@@ -103,8 +134,12 @@ const Tourism = () => {
             </Box>
           </Box>
 
-          {/* Danh sách tour */}
-          <Box sx={{ flex: 1, pl: 5 }}>
+          <Box
+            sx={{
+              flex: 1,
+              pl: { xs: 0, md: 5 },
+            }}
+          >
             {isLoading ? (
               <Box sx={{ display: 'flex', justifyContent: 'center', mt: 5 }}>
                 <CircularProgress />
@@ -122,9 +157,9 @@ const Tourism = () => {
                 Không có tour nào phù hợp 😢
               </Typography>
             ) : (
-              <TourismTicket 
-                data={paginatedTours} 
-                isLoading={isLoading} 
+              <TourismTicket
+                data={paginatedTours}
+                isLoading={isLoading}
                 setSortOrder={setSortOrder}
                 page={page}
                 totalPages={totalPages}
@@ -136,6 +171,7 @@ const Tourism = () => {
       </Box>
     </Box>
   );
+
 };
 
 export default Tourism;

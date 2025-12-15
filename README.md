@@ -51,3 +51,13 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
     fontSize: 14,
     }}
 > -->
+
+const queryClient = useQueryClient();
+queryClient.invalidateQueries({
+    queryKey: ['headerUser', user.id],
+});
+
+xs: moblie
+md: pc
+sm: tablet
+lg: máy cỡ lớn

@@ -3,7 +3,7 @@ import * as React from 'react';
 import Typography from '@mui/material/Typography';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Link from 'next/link';
-import styles from "../css/style.module.css";
+import styles from "../../css/style.module.css";
 import { IHotTour } from '@/typescript/home';
 
 //Tourism
@@ -242,6 +242,20 @@ export function AdminBreadcrumbs({ pathname }: { pathname: string }) {
             </Typography>
           );
         })}
+      </Breadcrumbs>
+    </div>
+  );
+}
+
+///News
+export function NewsBreadcrumbs() {
+  return (
+    <div role="presentation">
+      <Breadcrumbs sx={{ color: '#fff' }}>
+        <Link href="/" className={styles.linkTravel}>
+          Trang chủ
+        </Link>
+        <Typography sx={{ color: '#FFFFFF', fontWeight: 400, fontFamily: 'Inter', fontSize: '14px' }}>Tin tức</Typography>
       </Breadcrumbs>
     </div>
   );

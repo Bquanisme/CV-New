@@ -5,8 +5,6 @@ import {
   IAuthState, ILoginPayload, IAuthResponse, IRegisterPayload, IVerifyResponse, IVerifyPayload, IAdminPayload, IAdminResponse
 } from "@/typescript/home";
 
-// ---------------------- Async Thunks ----------------------
-
 // Login user
 export const login = createAsyncThunk<IAuthResponse, ILoginPayload, { rejectValue: string }>(
   "auth/login",
@@ -74,7 +72,6 @@ export const verify = createAsyncThunk<IVerifyResponse, IVerifyPayload, { reject
   }
 );
 
-// ---------------------- Slice ----------------------
 const initialState: IAuthState = {
   token: null,
   role: null,

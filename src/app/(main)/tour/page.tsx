@@ -4,7 +4,7 @@ import Typography from "@mui/material/Typography";
 import Banner from "../../../assets/TourBanner.jpg"
 import Box from '@mui/material/Box';
 import Image from "next/image"
-import { TourBreadcrumbs } from '@/components/breadcrumbs';
+import { TourBreadcrumbs } from '@/components/otherComponents/breadcrumbs';
 import { useRouter } from 'next/navigation';
 import TourDiscover from './tourDiscover';
 import Link from 'next/link';
@@ -89,7 +89,7 @@ const Tour = () => {
               fontFamily: 'Inter'
             }}
           >
-            Dịch vụ giải trí được tìm kiếm, lựa chọn nhiều nhất. Chúng tôi sẽ đề xuất cho bạn 
+            Dịch vụ giải trí được tìm kiếm, lựa chọn nhiều nhất. Chúng tôi sẽ đề xuất cho bạn
           </Typography>
         </Box>
       </Box>
@@ -123,14 +123,14 @@ const Tour = () => {
         </Box>
         <TourTicket />
         <Box sx={{ display: "flex", justifyContent: "center", mb: 5, gap: 2 }}>
-          <Link href="/travel/tourism" style={{textTransform: 'none', textDecoration: "none",}}>
-                <Typography sx={{ color: '#1C5C80', fontWeight: 700, fontSize: '20px', mb: 1, fontStyle: "Bold", fontFamily: 'SVN-Gilroy' }}>
-                    Khám phá thêm
-                </Typography>
-            </Link>
-            <Link href="/travel/tourism" style={{textTransform: 'none', textDecoration: "none",}}>
-                <ArrowForwardIcon sx={{width: 30, height: 30, color: '#1C5C80'}}/>
-            </Link>
+          <Link href="/travel/tourism" style={{ textTransform: 'none', textDecoration: "none", }}>
+            <Typography sx={{ color: '#1C5C80', fontWeight: 700, fontSize: '20px', mb: 1, fontStyle: "Bold", fontFamily: 'SVN-Gilroy' }}>
+              Khám phá thêm
+            </Typography>
+          </Link>
+          <Link href="/travel/tourism" style={{ textTransform: 'none', textDecoration: "none", }}>
+            <ArrowForwardIcon sx={{ width: 30, height: 30, color: '#1C5C80' }} />
+          </Link>
         </Box>
       </Box>
     </Box>

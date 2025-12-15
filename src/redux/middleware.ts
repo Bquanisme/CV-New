@@ -6,7 +6,7 @@ export function middleware(req: NextRequest) {
     const role = req.cookies.get("role")?.value;
     const pathname = req.nextUrl.pathname;
 
-    // Pages
+
     const userPages = ["/tour", "/cart", "/history", "/profile",];
     const adminPages = ["/dashboard"];
 
@@ -21,7 +21,7 @@ export function middleware(req: NextRequest) {
     }
 
     // Admin cố vào user
-    if (userPages.some(p => pathname.startsWith(p)) && role === "admin") {
+    if (userPages.some(p => pathname.startsWith(p)) && role !== "user") {
         return NextResponse.redirect(new URL("/dashboard", req.url));
     }
 

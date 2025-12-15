@@ -14,125 +14,131 @@ type IProps = {
 }
 
 const HomeEatingPlace = (props: IProps) => {
-  return (
-    <Box sx={{mt: 10, mb: 10}}>
-        <Box sx={{
-            textAlign: 'center',
-            mb: 6
-        }}
-        >
-            <Typography sx={{
-                fontFamily: 'SVN-Gilroy',
-                fontWeight: 700,
-                fontSize: '40px',
-                color: '#1C5C80'
-            }}>
-                Địa điểm ăn uống
-            </Typography>
-            <Typography sx={{
-                fontWeight: 400,
-                fontSize: '16px',
-                color: '#565656',
-                mt: 3,
+    return (
+        <Box sx={{ mt: 10, mb: 10 }}>
+            <Box sx={{
+                textAlign: 'center',
+                mb: 6
+            }}
+            >
+                <Typography sx={{
+                    fontFamily: 'SVN-Gilroy',
+                    fontWeight: 700,
+                    fontSize: '40px',
+                    color: '#1C5C80'
+                }}>
+                    Địa điểm ăn uống
+                </Typography>
+                <Typography sx={{
+                    fontWeight: 400,
+                    fontSize: '16px',
+                    color: '#565656',
+                    mt: 3,
 
-            }}>
-                Lựa chọn địa điểm thưởng thức ẩm thực cũng là một trong những trải nghiệm đáng nhớ khi <br />
-                đến Nha Trang.  Hãy tìm cho mình một không gian xanh để thư giãn và tận hưởng hành trình <br /> 
-                một cách thật trọn vẹn.
-            </Typography>
-        </Box>
-        <Box sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            gap: 3.5,
-        }}>
-            {ApiFakeHome?.place.map(place => (
-                <Box
-                    key={place?.id}
-                    bgcolor={"white"}
-                    sx={{
-                        width: 312,
-                        height: 604,
-                        borderRadius: 5
-                    }}
-                >
-                    <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 3, textAlign: 'center'}}>
+                }}>
+                    Lựa chọn địa điểm thưởng thức ẩm thực cũng là một trong những trải nghiệm đáng nhớ khi <br />
+                    đến Nha Trang.  Hãy tìm cho mình một không gian xanh để thư giãn và tận hưởng hành trình <br />
+                    một cách thật trọn vẹn.
+                </Typography>
+            </Box>
+            <Box
+                sx={{
+                    display: "flex",
+                    flexWrap: "wrap",              // 🔥 Cho phép xuống dòng
+                    justifyContent: "center",
+                    gap: 3.5,
+                }}
+            >
+                {ApiFakeHome?.place.map((place) => (
+                    <Box
+                        key={place?.id}
+                        bgcolor={"white"}
+                        sx={{
+                            width: { xs: "100%", sm: "48%", md: 312 },
+                            height: "auto",
+                            borderRadius: 5,
+                            p: 2,
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
+                        }}
+                    >
                         <Image
-                        priority={false} 
-                        src={place?.image}
-                        alt="place"
-                        width={219.7}
-                        height={219}
-                        style={{ objectFit: "cover", borderRadius: '50%' }} 
+                            priority={false}
+                            src={place?.image}
+                            alt="place"
+                            width={220}
+                            height={220}
+                            style={{ objectFit: "cover", borderRadius: "50%" }}
                         />
-                        <Rating value={5} readOnly size="medium" sx={{mt: 1}}/>
-                        <Typography sx={{ color: '#A9A9A9', fontWeight: 400, fontSize: '14px', mt: 1, mb: 2 }}>
+
+                        <Rating value={5} readOnly size="medium" sx={{ mt: 1 }} />
+
+                        <Typography sx={{ color: "#A9A9A9", fontWeight: 400, fontSize: "14px", mt: 1 }}>
                             3,014 Review
                         </Typography>
-                        <Typography sx={{ color: '#0B0B0B', fontWeight: 700, fontSize: '18px', mt: 1, mb: 1.5 }}>
+
+                        <Typography sx={{ color: "#0B0B0B", fontWeight: 700, fontSize: "18px", mt: 1 }}>
                             {place?.title}
                         </Typography>
-                        <Typography sx={{ color: '#343434', fontWeight: 500, fontSize: '14px', mb: 1, fontStyle: "Medium" }}>
+
+                        <Typography sx={{ color: "#343434", fontWeight: 500, fontSize: "14px", mb: 1 }}>
                             {place?.tour}
                         </Typography>
-                        <Typography sx={{ color: '#565656', fontWeight: 400, fontSize: '14px', mb: 3, fontStyle: "Regular", p: 2 }}>
+
+                        <Typography
+                            sx={{
+                                color: "#565656",
+                                fontWeight: 400,
+                                fontSize: "14px",
+                                mb: 3,
+                                textAlign: "center",
+                                px: 1,
+                            }}
+                        >
                             {place?.description}
                         </Typography>
-                        <Box sx={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            gap: 1
-                        }}>
-                            <PhoneIcon sx={{
-                                width: 19.97,
-                                height: 20,
-                                color: '#A9A9A9'
-                            }}/>
-                            <Typography sx={{ color: '#A9A9A9', fontWeight: 400, fontSize: '16px', mb: 1, fontStyle: "Regular" }}>
+
+                        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                            <PhoneIcon sx={{ width: 20, height: 20, color: "#A9A9A9" }} />
+                            <Typography sx={{ color: "#A9A9A9", fontWeight: 400, fontSize: "16px" }}>
                                 0913.504.319
                             </Typography>
                         </Box>
-                        <Box sx={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            gap: 1
-                        }}>
-                            <AccessTimeIcon sx={{
-                                width: 19.97,
-                                height: 20,
-                                color: '#A9A9A9'
-                            }}/>
-                            <Typography sx={{ color: '#A9A9A9', fontWeight: 400, fontSize: '16px', mb: 1, fontStyle: "Regular" }}>
-                                10h20-23h00
+
+                        <Box sx={{ display: "flex", alignItems: "center", gap: 1, mt: 1 }}>
+                            <AccessTimeIcon sx={{ width: 20, height: 20, color: "#A9A9A9" }} />
+                            <Typography sx={{ color: "#A9A9A9", fontWeight: 400, fontSize: "16px" }}>
+                                10h20 - 23h00
                             </Typography>
                         </Box>
                     </Box>
-                </Box>
-            ))}
-        </Box><br />
-        <Box sx={{ display: "flex", justifyContent: "center", mt: 5 }}>
-        <Button 
-          variant="contained" 
-          sx={{
-            width: 140,
-            height: 56,
-            bgcolor: 'red', 
-            fontSize: '16px',
-            color: 'white',
-            textTransform: 'none',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            cursor: 'pointer',
-            borderRadius: '10px',
-            '&:hover': { bgcolor: 'darkred' }
-          }}
-        >
-          Xem thêm
-        </Button>
-      </Box>
-    </Box>
-  )
+                ))}
+            </Box>
+            <br />
+            <Box sx={{ display: "flex", justifyContent: "center", mt: 5 }}>
+                <Button
+                    variant="contained"
+                    sx={{
+                        width: 140,
+                        height: 56,
+                        bgcolor: 'red',
+                        fontSize: '16px',
+                        color: 'white',
+                        textTransform: 'none',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        cursor: 'pointer',
+                        borderRadius: '10px',
+                        '&:hover': { bgcolor: 'darkred' }
+                    }}
+                >
+                    Xem thêm
+                </Button>
+            </Box>
+        </Box>
+    )
 }
 
 export default HomeEatingPlace

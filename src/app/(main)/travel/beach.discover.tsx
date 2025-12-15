@@ -15,7 +15,8 @@ const BeachDiscover = (props: IProps) => {
         <Box sx={{
             display: 'flex',
             justifyContent: 'center',
-            gap: 10
+            gap: 10,
+            flexWrap: 'wrap'
         }}>
             {ApiFakeHome?.beach.map(beach => (
                 <Box

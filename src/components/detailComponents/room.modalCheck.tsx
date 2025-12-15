@@ -22,6 +22,7 @@ import { TransitionProps } from "@mui/material/transitions";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { orderRoom } from "@/redux/Slice/userSlice";
 import { toast } from "react-toastify";
+import { useQueryClient } from "@tanstack/react-query";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & { children: React.ReactElement },
@@ -57,6 +58,7 @@ type IProps = {
 export default function RoomModalCheck({ check, handleCloseCheck, id }: IProps) {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.auth);
+  const queryClient = useQueryClient();
 
   return (
     <BootstrapDialog
@@ -105,8 +107,14 @@ export default function RoomModalCheck({ check, handleCloseCheck, id }: IProps) 
                     start_date: values.start_date,
                     end_date: values.end_date,
                   })
-                );
+                ).unwrap();
+
+                queryClient.invalidateQueries({
+                  queryKey: ["orders", user?.id],
+                });
+
                 toast.success("🎉 Đặt vé thành công!", { theme: "colored" });
+
               } catch (err: any) {
                 toast.error(err.message || "Có lỗi xảy ra!", { theme: "colored" });
               } finally {

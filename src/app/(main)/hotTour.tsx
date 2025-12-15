@@ -10,28 +10,29 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline';
 import FlagIcon from '@mui/icons-material/Flag';
 import DirectionsBoatIcon from '@mui/icons-material/DirectionsBoat';
-import { IHotTour } from '@/typescript/home';
-import CircularProgressLoading from '@/components/circularProgress.loading';
+import CircularProgressLoading from '@/components/otherComponents/circularProgress.loading';
 import { useRouter } from 'next/navigation';
 
-type IProps = {
-  hotTour?: IHotTour
-}
+const HotTour = () => {
 
-const HotTour = (props: IProps) => {
   const router = useRouter();
 
   const { data, isLoading } = useQuery({
-    queryKey: ['travels'],            // Query key cố định
-    queryFn: fetchTravels,            // API function
-    staleTime: Infinity,              // luôn fresh
-    refetchOnWindowFocus: false,      // không tự refetch khi focus
-    refetchOnReconnect: false,        // không tự refetch khi mạng reconnect
-  })
+    queryKey: ["travels"],
+    queryFn: fetchTravels,
+    staleTime: Infinity,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false
+  });
 
-  // console.log(data)
+  if (isLoading) return <CircularProgressLoading />;
 
-  if (isLoading) return <CircularProgressLoading />
+  const getDiffDays = (start: string, end: string) => {
+    if (!start || !end) return 0;
+    const s = new Date(start);
+    const e = new Date(end);
+    return Math.ceil(Math.abs(e.getTime() - s.getTime()) / (1000 * 3600 * 24));
+  };
 
   return (
     <Box>
@@ -42,15 +43,6 @@ const HotTour = (props: IProps) => {
         justifyContent: 'center'
       }}>
         {data?.map((item: any) => {
-          const getDiffDays = (start_date: string, end_date: string): number => {
-            if (!start_date || !end_date) return 0;
-
-            const start = new Date(start_date);
-            const end = new Date(end_date);
-
-            const diffMs = Math.abs(end.getTime() - start.getTime());
-            return Math.ceil(diffMs / (1000 * 60 * 60 * 24));
-          };
 
           const diffDays = getDiffDays(item.start_date, item.end_date);
 
@@ -63,38 +55,56 @@ const HotTour = (props: IProps) => {
                 bgcolor: '#fff',
                 borderRadius: 4,
                 display: 'flex',
+
+                // 📌 MOBILE (column) — DESKTOP (row)
+                flexDirection: {
+                  xs: 'column',
+                  md: 'row'
+                },
+
                 margin: '16px auto',
-                minHeight: 278,
                 border: '1px solid #D9D9D9',
-                boxShadow: '0 4px 4px #00000040'
+                boxShadow: '0 4px 4px #00000040',
               }}
             >
-              <Box sx={{ position: "relative", width: '35%', maxWidth: 424, minHeight: 278, overflow: 'hidden' }}>
+              {/* IMAGE */}
+              <Box sx={{
+                position: "relative",
+                width: { xs: '100%', md: '35%' },
+                minHeight: { xs: 220, md: 278 },
+                overflow: 'hidden'
+              }}>
                 <Image
                   src={item?.logo}
                   alt={item?.name}
                   fill
                   priority
-                  style={{ objectFit: 'cover', borderTopLeftRadius: 10, borderBottomLeftRadius: 10 }}
+                  style={{
+                    objectFit: 'cover',
+                    borderTopLeftRadius: 10,
+                    borderBottomLeftRadius: 10
+                  }}
                 />
               </Box>
 
-              <Box sx={{ flex: 1, p: 3, display: "flex", flexDirection: "column", justifyContent: "space-between", gap: 3 }}>
-                <Typography
-                  sx={{
-                    fontWeight: 600,
-                    color: '#1C5C80',
-                    fontSize: 20,
-                    mb: 1
-                  }}
-                >
+              {/* CONTENT */}
+              <Box sx={{
+                flex: 1,
+                p: 3,
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between",
+                gap: 3
+              }}>
+                <Typography sx={{ fontWeight: 600, color: '#1C5C80', fontSize: 20 }}>
                   {item?.name}
                 </Typography>
-                <Typography sx={{ color: '#565656', flexGrow: 1, fontSize: '15px' }}>
+
+                <Typography sx={{ color: '#565656', fontSize: '15px' }}>
                   {item?.description}
                 </Typography>
 
-                <Box sx={{ display: 'flex', gap: 3, mt: 2 }}>
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3 }}>
                   <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
                     <AccessTimeIcon sx={{ fontSize: 18, color: '#A9A9A9' }} />
                     <Typography sx={{ fontSize: 14, color: '#A9A9A9' }}>
@@ -122,19 +132,24 @@ const HotTour = (props: IProps) => {
                 </Box>
               </Box>
 
+              {/* PRICE / RATING BOX */}
               <Box
                 sx={{
-                  width: '220px',
-                  borderLeft: '3px dashed #ccc',
+                  width: { xs: '100%', md: '220px' },
+
+                  // Border responsive
+                  borderLeft: { md: '3px dashed #ccc' },
+                  borderTop: { xs: '3px dashed #ccc', md: 'none' },
+
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
                   p: 3,
                   gap: 1,
-                  position: 'relative' // để absolute bám vào
+                  position: 'relative'
                 }}
               >
-                {/* Hình tròn trên */}
+                {/* Circle top — hidden on mobile */}
                 <Box
                   sx={{
                     width: 52,
@@ -145,10 +160,11 @@ const HotTour = (props: IProps) => {
                     top: -26,
                     left: -26,
                     border: '1px solid #D9D9D9',
+                    display: { xs: "none", md: "block" }
                   }}
                 />
 
-                {/* Hình tròn dưới */}
+                {/* Circle bottom — hidden on mobile */}
                 <Box
                   sx={{
                     width: 52,
@@ -156,65 +172,63 @@ const HotTour = (props: IProps) => {
                     bgcolor: '#D9D9D9',
                     borderRadius: '50%',
                     position: 'absolute',
-                    bottom: -30,
+                    bottom: -26,
                     left: -26,
                     border: '1px solid #D9D9D9',
                     boxShadow: 'inset 0px 4px 0px #00000040',
-                    overflow: 'hidden'
+                    display: { xs: "none", md: "block" }
                   }}
                 />
 
-                <Typography sx={{ color: '#A9A9A9', fontWeight: 400, fontSize: '14px' }}>
+                <Typography sx={{ color: "#A9A9A9", fontSize: 14 }}>
                   3,014 Review
                 </Typography>
-                <Rating value={5} readOnly size="medium" /><br />
-                <Typography sx={{ fontWeight: 600, fontSize: 20, color: '#343434' }}>
-                  {item?.cost?.toLocaleString()} VND
+
+                <Rating value={5} readOnly size="medium" />
+
+                <Typography sx={{ fontWeight: 600, fontSize: 20 }}>
+                  {item.cost.toLocaleString()} VND
                 </Typography>
-                <Typography variant="body2" sx={{ color: '#343434', fontWeight: 600, fontSize: '20px' }}>
+
+                <Typography sx={{ fontWeight: 600, fontSize: 20 }}>
                   / người
                 </Typography>
+
                 <Button
-                  variant='outlined'
-                  onClick={() => router.push(`/travel/tourism/${item?.id}`)}
+                  variant="outlined"
+                  onClick={() => router.push(`/travel/tourism/${item.id}`)}
                   sx={{
                     mt: 1,
                     px: 3,
                     py: 1,
-                    color: '#1C5C80',
-                    border: 'solid 1px #1C5C80',
-                    borderRadius: '10px',
-                    cursor: 'pointer',
-                    fontWeight: 500,
-                    textTransform: 'none',
-                    '&:hover': { bgcolor: '#1C5C80', color: 'white' }
+                    color: "#1C5C80",
+                    border: "solid 1px #1C5C80",
+                    borderRadius: "10px",
+                    textTransform: "none",
+                    "&:hover": { bgcolor: "#1C5C80", color: "white" }
                   }}
                 >
                   Đặt ngay
                 </Button>
               </Box>
-
             </Box>
           )
         })}
-      </Box><br />
-      <Box sx={{ display: "flex", justifyContent: "center", mt: 3 }}>
+      </Box>
+
+      {/* Button xem thêm */}
+      <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
         <Button
           variant="contained"
           onClick={() => router.push("/travel/tourism")}
           sx={{
             width: 140,
             height: 56,
-            bgcolor: 'red',
-            fontSize: '16px',
-            color: 'white',
-            textTransform: 'none',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            cursor: 'pointer',
-            borderRadius: '10px',
-            '&:hover': { bgcolor: 'darkred' }
+            bgcolor: "red",
+            fontSize: 16,
+            borderRadius: 2,
+            textTransform: "none",
+            "&:hover": { bgcolor: "darkred" }
           }}
         >
           Xem thêm
@@ -222,6 +236,6 @@ const HotTour = (props: IProps) => {
       </Box>
     </Box>
   )
-}
+};
 
-export default HotTour
+export default HotTour;

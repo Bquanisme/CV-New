@@ -1,15 +1,14 @@
 import React from 'react'
 import {
-  Button,
   Box,
   Typography,
   IconButton,
-} from '@mui/material';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import Steppers from '@/components/steppers';
-import DetailCartLeft from '@/components/detailCart/detailCartLeft';
-import { useRouter } from 'next/navigation';
-import DetailCartRight from '@/components/detailCart/detailCartRight';
+} from '@mui/material'
+import ArrowBackIcon from '@mui/icons-material/ArrowBack'
+import Steppers from '@/components/otherComponents/steppers'
+import DetailCartLeft from '@/components/detailCart/detailCartLeft'
+import DetailCartRight from '@/components/detailCart/detailCartRight'
+import { useRouter } from 'next/navigation'
 
 type IProps = {
   id: string
@@ -17,52 +16,75 @@ type IProps = {
 }
 
 const DetailCartUI = ({ id, data }: IProps) => {
-  const router = useRouter();
-  const handleReturn = () => {
-    router.push("/cart")
-  }
+  const router = useRouter()
+
   return (
     <Box>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 6 }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 3, width: '30%' }}>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: { xs: 'column', md: 'row' },
+          alignItems: { xs: 'flex-start', md: 'center' },
+          justifyContent: 'space-between',
+          gap: { xs: 2, md: 0 },
+          mb: { xs: 4, md: 6 },
+        }}
+      >
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 2,
+            width: { xs: '100%', md: '30%' },
+          }}
+        >
           <IconButton
-            onClick={handleReturn}
+            onClick={() => router.push('/cart')}
             sx={(theme) => ({
-              "&:hover": {
-                backgroundColor: "rgba(0,0,0,0.6)",
+              '&:hover': {
+                backgroundColor: 'rgba(0,0,0,0.6)',
                 color: theme.palette.grey[100],
               },
             })}
           >
             <ArrowBackIcon />
           </IconButton>
-          <Typography
-            variant="body2"
-            fontWeight={600}
-            fontFamily="Inter"
-            fontSize="16px"
-          >
-            Mã đơn hàng:  {' '}
-            <span style={{
-              color: '#939393ff',
-              fontFamily: "Inter",
-              fontSize: "16px",
-              marginLeft: 4,
-            }}>
+
+          <Typography fontWeight={600} fontSize={16} fontFamily="Inter">
+            Mã đơn hàng:{' '}
+            <Box component="span" sx={{ color: '#939393' }}>
               ĐH2000{id}
-            </span>
+            </Box>
           </Typography>
         </Box>
-        <Steppers />
+
+        {/* Stepper */}
+        <Box sx={{ width: { xs: '100%', md: 'auto' } }}>
+          <Steppers />
+        </Box>
       </Box>
-      <Box>
-        <Box sx={{ display: 'flex', gap: 2 }}>
-          <Box sx={{ flex: '1 1 68%' }}>
-            <DetailCartLeft data={data} />
-          </Box>
-          <Box sx={{ flex: '1 1 30%' }}>
-            <DetailCartRight data={data} id={id}/>
-          </Box>
+
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: { xs: 'column', md: 'row' },
+          gap: 2,
+        }}
+      >
+        <Box sx={{ flex: '1 1 68%', width: '100%' }}>
+          <DetailCartLeft data={data} />
+        </Box>
+
+        <Box
+          sx={{
+            flex: '1 1 30%',
+            width: '100%',
+            position: { md: 'sticky' },
+            top: { md: 90 },
+            height: 'fit-content',
+          }}
+        >
+          <DetailCartRight data={data} id={id} />
         </Box>
       </Box>
     </Box>

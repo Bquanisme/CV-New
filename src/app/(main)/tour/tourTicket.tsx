@@ -11,7 +11,7 @@ import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline';
 import FlagIcon from '@mui/icons-material/Flag';
 import DirectionsBoatIcon from '@mui/icons-material/DirectionsBoat';
 import { IHotTour } from '@/typescript/home';
-import CircularProgressLoading from '@/components/circularProgress.loading';
+import CircularProgressLoading from '@/components/otherComponents/circularProgress.loading';
 import { useRouter } from 'next/navigation';
 
 type IProps = {
@@ -28,8 +28,6 @@ const TourTicket = (props: IProps) => {
         refetchOnWindowFocus: false,      // không tự refetch khi focus
         refetchOnReconnect: false,        // không tự refetch khi mạng reconnect
     })
-
-    // console.log(data)
 
     if (isLoading) return <CircularProgressLoading />
 
@@ -131,7 +129,7 @@ const TourTicket = (props: IProps) => {
                                     alignItems: 'center',
                                     p: 3,
                                     gap: 1,
-                                    position: 'relative' // để absolute bám vào
+                                    position: 'relative'
                                 }}
                             >
                                 {/* Hình tròn trên */}
@@ -164,30 +162,32 @@ const TourTicket = (props: IProps) => {
                                     }}
                                 />
 
-                                <Typography sx={{ color: '#A9A9A9', fontWeight: 400, fontSize: '14px' }}>
+                                <Typography sx={{ color: "#A9A9A9", fontSize: 14 }}>
                                     3,014 Review
                                 </Typography>
-                                <Rating value={5} readOnly size="medium" /><br />
-                                <Typography sx={{ fontWeight: 600, fontSize: 20, color: '#343434' }}>
-                                    {item?.cost?.toLocaleString()} VND
+
+                                <Rating value={5} readOnly size="medium" />
+
+                                <Typography sx={{ fontWeight: 600, fontSize: 20 }}>
+                                    {item.cost.toLocaleString()} VND
                                 </Typography>
-                                <Typography variant="body2" sx={{ color: '#343434', fontWeight: 600, fontSize: '20px' }}>
+
+                                <Typography sx={{ fontWeight: 600, fontSize: 20 }}>
                                     / người
                                 </Typography>
+
                                 <Button
-                                    variant='outlined'
-                                    onClick={() => router.push(`/travel/tourism`)}
+                                    variant="outlined"
+                                    onClick={() => router.push(`/travel/tourism/${item.id}`)}
                                     sx={{
                                         mt: 1,
                                         px: 3,
                                         py: 1,
-                                        color: '#1C5C80',
-                                        border: 'solid 1px #1C5C80',
-                                        borderRadius: '10px',
-                                        cursor: 'pointer',
-                                        fontWeight: 500,
-                                        textTransform: 'none',
-                                        '&:hover': { bgcolor: '#1C5C80', color: 'white' }
+                                        color: "#1C5C80",
+                                        border: "solid 1px #1C5C80",
+                                        borderRadius: "10px",
+                                        textTransform: "none",
+                                        "&:hover": { bgcolor: "#1C5C80", color: "white" }
                                     }}
                                 >
                                     Đặt ngay

@@ -80,44 +80,70 @@ const BoxContactRoom = (props: IProps) => {
   ];
 
   return (
-    <Box>
-      <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mb: 10, mt: -23.8 }}>
+    <Box
+      sx={{
+        width: "100%",
+
+        // 👇 QUYẾT ĐỊNH ĐỘ TO THEO MÀN HÌNH
+        maxWidth: {
+          xs: "100%",   // mobile
+          sm: "100%",
+          md: 520,      // ⬅️ tablet TO HƠN
+          lg: 420,      // desktop gọn lại
+        },
+
+        mx: "auto",
+        mb: { xs: 6, md: 8, lg: 0 },
+      }}
+    >
+
+
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 2,
+          mb: 4,
+          mt: { xs: 0, md: 0, lg: -23.8 },
+        }}
+      >
         <Button
           variant="contained"
           color="error"
           onClick={handleOpenCheck}
           sx={{
-            width: 423,
+            width: "100%",
             height: 51,
             fontWeight: 700,
-            fontSize: "18px",
-            color: "#FFFFFF",
+            fontSize: { xs: 16, md: 17, lg: 18 },
             fontFamily: "SVN-Gilroy",
           }}
         >
           Liên hệ đặt vé
         </Button>
+
         <Button
           variant="outlined"
           color="error"
           onClick={handleOpen}
           sx={{
-            width: 423,
+            width: "100%",
             height: 51,
             fontWeight: 700,
-            fontSize: "18px",
-            color: "#E54141",
+            fontSize: { xs: 16, md: 17, lg: 18 },
             fontFamily: "SVN-Gilroy",
           }}
         >
           Viết bình luận
         </Button>
       </Box>
+
+      {/* Contact box */}
       <Box
         sx={{
-          width: 420,
-          borderRadius: "10px",
-          p: 4,
+          width: "100%",
+          borderRadius: 2,
+          p: { xs: 2.5, md: 3, lg: 4 },
           bgcolor: "#FFFFFF",
           boxShadow: "0 4px 15px rgba(0,0,0,0.1)",
           display: "flex",
@@ -128,7 +154,7 @@ const BoxContactRoom = (props: IProps) => {
         <Typography
           sx={{
             fontWeight: 600,
-            fontSize: "20px",
+            fontSize: { xs: 18, md: 19, lg: 20 },
             color: "#1C5C80",
             fontFamily: "SVN-Gilroy",
             textAlign: "center",
@@ -143,7 +169,7 @@ const BoxContactRoom = (props: IProps) => {
             key={i}
             sx={{
               display: "flex",
-              alignItems: "center",
+              alignItems: "flex-start",
               gap: 2,
               borderBottom: "1px solid #e0e0e0",
               pb: 1.5,
@@ -154,17 +180,18 @@ const BoxContactRoom = (props: IProps) => {
               <Typography
                 sx={{
                   fontWeight: 500,
-                  fontSize: "15px",
+                  fontSize: { xs: 14, md: 15 },
                   color: "#1C5C80",
                   fontFamily: "Inter",
                 }}
               >
                 {item.label}
               </Typography>
+
               <Typography
                 sx={{
                   fontWeight: 400,
-                  fontSize: "15px",
+                  fontSize: { xs: 14, md: 15 },
                   color: "#3C3C3C",
                   fontFamily: "Inter",
                   wordBreak: "break-word",
@@ -176,7 +203,12 @@ const BoxContactRoom = (props: IProps) => {
           </Box>
         ))}
       </Box>
-      <RoomModalCheck check={check} handleCloseCheck={handleCloseCheck} id={id} />
+
+      <RoomModalCheck
+        check={check}
+        handleCloseCheck={handleCloseCheck}
+        id={id}
+      />
       <Comment open={open} handleClose={handleClose} id={id} />
     </Box>
   );

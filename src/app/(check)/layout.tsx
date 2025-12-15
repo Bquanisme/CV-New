@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useState } from 'react';
 import {
     Box,
     Typography,
@@ -11,7 +11,10 @@ import {
     ListItemIcon,
     ListItemText,
     Divider,
+    IconButton,
+    useMediaQuery,
 } from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LockIcon from '@mui/icons-material/Lock';
 import HistoryIcon from '@mui/icons-material/History';
@@ -29,19 +32,24 @@ import { useQuery } from '@tanstack/react-query';
 import { IUser } from '@/typescript/home';
 import { fetchHeaderUser } from '@/api/home/api.home';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
-import AppMenuCheck from '@/components/app.menuCheck';
-import { CartBreadcrumbs } from '@/components/breadcrumbs';
+import AppMenuCheck from '@/components/headerMain/app.menuCheck';
+import { CartBreadcrumbs } from '@/components/otherComponents/breadcrumbs';
 import { logout } from '@/redux/Slice/authSlice';
 import { toast } from 'react-toastify';
 
-const drawerWidth = 360;
+const drawerWidth = 320;
 
 export default function CheckLayout({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
-    const { user } = useAppSelector((state) => state.auth);
-    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-    const dispatch = useAppDispatch();
     const router = useRouter();
+    const dispatch = useAppDispatch();
+    const { user } = useAppSelector((state) => state.auth);
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
+    const isMobile = useMediaQuery('(max-width:1024px)');
+    const [mobileOpen, setMobileOpen] = useState(false);
+
+    const toggleDrawer = () => setMobileOpen((prev) => !prev);
 
     const { data } = useQuery<IUser>({
         queryKey: ['headerUser', user?.id],
@@ -49,201 +57,188 @@ export default function CheckLayout({ children }: { children: React.ReactNode })
         enabled: !!user?.id,
     });
 
-    const menuItems = [
-        {
-            title: 'Cá nhân',
-            items: [
-                { text: 'Thông tin cá nhân', icon: <AccountCircleIcon />, href: '/individualUser' },
-                { text: 'Đổi mật khẩu', icon: <LockIcon />, href: '/changePassword' },
-            ],
-        },
-        {
-            title: 'Đơn hàng',
-            items: [{ text: 'Lịch sử', icon: <HistoryIcon color="error" />, href: '/cart' }],
-        },
-    ];
-
-    const menuLiked = [
-        {
-            title: 'Yêu thích',
-            items: [
-                { text: 'Tour', icon: <FavoriteIcon /> },
-                { text: 'Khách sạn', icon: <HotelIcon /> },
-                { text: 'Ăn uống', icon: <RestaurantIcon /> },
-                { text: 'Điểm du lịch', icon: <PlaceIcon /> },
-            ],
-        },
-    ]
-
     const handleLogout = async () => {
         await dispatch(logout());
         router.push('/');
         toast.success('Bạn đã đăng xuất thành công!');
-    }
+    };
+
+    const menuItemStyle = (active = false) => ({
+        borderRadius: 2,
+        mx: 1,
+        my: 0.4,
+        '&:hover': {
+            backgroundColor: 'rgba(25,118,210,0.08)',
+            transform: 'translateX(3px)',
+            transition: '0.25s',
+        },
+        ...(active && {
+            backgroundColor: 'rgba(25,118,210,0.12)',
+        }),
+    });
+
+    /* ===== SIDEBAR CONTENT ===== */
+    const drawerContent = (
+        <Box sx={{ px: 2 }}>
+            <Toolbar />
+
+            <Typography
+                variant="h6"
+                textAlign="center"
+                fontFamily="Inter"
+                fontWeight={600}
+                mb={3}
+            >
+                Tài khoản
+            </Typography>
+
+            <List>
+                <Typography fontSize={13} fontWeight={600} ml={2} my={2} color="text.secondary">
+                    Cá nhân
+                </Typography>
+
+                <ListItem disablePadding>
+                    <ListItemButton
+                        component={Link}
+                        href="/individualUser"
+                        selected={pathname === '/individualUser'}
+                        sx={menuItemStyle(pathname === '/individualUser')}
+                        onClick={() => setMobileOpen(false)}
+                    >
+                        <ListItemIcon sx={{ minWidth: 40 }}>
+                            <AccountCircleIcon color={pathname === '/individualUser' ? 'primary' : 'inherit'} />
+                        </ListItemIcon>
+                        <ListItemText primary="Thông tin cá nhân" />
+                    </ListItemButton>
+                </ListItem>
+
+                <ListItem disablePadding>
+                    <ListItemButton
+                        component={Link}
+                        href="/changePassword"
+                        selected={pathname === '/changePassword'}
+                        sx={menuItemStyle(pathname === '/changePassword')}
+                        onClick={() => setMobileOpen(false)}
+                    >
+                        <ListItemIcon sx={{ minWidth: 40 }}>
+                            <LockIcon color={pathname === '/changePassword' ? 'primary' : 'inherit'} />
+                        </ListItemIcon>
+                        <ListItemText primary="Đổi mật khẩu" />
+                    </ListItemButton>
+                </ListItem>
+
+                <Divider sx={{ my: 2 }} />
+
+                <Typography fontSize={13} fontWeight={600} ml={2} my={2} color="text.secondary">
+                    Đơn hàng
+                </Typography>
+
+                <ListItem disablePadding>
+                    <ListItemButton
+                        component={Link}
+                        href="/cart"
+                        selected={pathname === '/cart'}
+                        sx={menuItemStyle(pathname === '/cart')}
+                        onClick={() => setMobileOpen(false)}
+                    >
+                        <ListItemIcon sx={{ minWidth: 40 }}>
+                            <HistoryIcon color={pathname === '/cart' ? 'primary' : 'inherit'} />
+                        </ListItemIcon>
+                        <ListItemText primary="Lịch sử đặt vé" />
+                    </ListItemButton>
+                </ListItem>
+
+                <Divider sx={{ my: 2 }} />
+
+                <Typography fontSize={13} fontWeight={600} ml={2} my={2} color="text.secondary">
+                    Yêu thích
+                </Typography>
+
+                {[FavoriteIcon, HotelIcon, RestaurantIcon, PlaceIcon].map((Icon, i) => (
+                    <ListItem disablePadding key={i}>
+                        <ListItemButton sx={menuItemStyle()}>
+                            <ListItemIcon sx={{ minWidth: 40 }}>
+                                <Icon />
+                            </ListItemIcon>
+                            <ListItemText primary={['Tour', 'Khách sạn', 'Ăn uống', 'Điểm du lịch'][i]} />
+                        </ListItemButton>
+                    </ListItem>
+                ))}
+
+                <Divider sx={{ my: 2 }} />
+
+                <ListItem disablePadding>
+                    <ListItemButton
+                        onClick={handleLogout}
+                        sx={{
+                            mx: 1,
+                            borderRadius: 2,
+                            '&:hover': { backgroundColor: 'rgba(244,67,54,0.1)' },
+                        }}
+                    >
+                        <ListItemIcon>
+                            <LogoutIcon color="error" />
+                        </ListItemIcon>
+                        <ListItemText
+                            primary="Đăng xuất"
+                            primaryTypographyProps={{ color: 'error.main', fontWeight: 500 }}
+                        />
+                    </ListItemButton>
+                </ListItem>
+            </List>
+        </Box>
+    );
 
     return (
-        <Box
-            sx={{
-                display: "flex",
-                bgcolor: '#f8f9fb',
-                minHeight: "100vh", //phủ toàn màn hình
-            }}
-        >
-            <Drawer
-                variant="permanent"
-                sx={{
-                    width: drawerWidth,
-                    flexShrink: 0,
-                    [`& .MuiDrawer-paper`]: {
+        <Box sx={{ display: 'flex', bgcolor: '#f8f9fb', minHeight: '100vh' }}>
+            {/* MOBILE DRAWER */}
+            {isMobile && (
+                <Drawer
+                    variant="temporary"
+                    open={mobileOpen}
+                    onClose={toggleDrawer}
+                    ModalProps={{ keepMounted: true }}
+                    sx={{
+                        '& .MuiDrawer-paper': {
+                            width: drawerWidth,
+                        },
+                    }}
+                >
+                    {drawerContent}
+                </Drawer>
+            )}
+
+            {/* DESKTOP DRAWER */}
+            {!isMobile && (
+                <Drawer
+                    variant="permanent"
+                    sx={{
                         width: drawerWidth,
-                        boxSizing: 'border-box',
-                        backgroundColor: '#fff',
-                        borderRight: '1px solid #eee',
-                    },
-                }}
-            >
-                <Toolbar />
-                <Box sx={{ p: 2, pt: 0 }}>
-                    {menuItems.map((section, index) => (
-                        <Box key={index}>
-                            <Typography
-                                variant="h6"
-                                fontWeight={500}
-                                fontSize="14px"
-                                fontFamily="Inter"
-                                my={2}
-                                ml={2}
-                            >
-                                {section.title}
-                            </Typography>
-                            <List>
-                                {section.items.map((item) => {
-                                    const isActive = pathname === item.href;
-                                    return (
-                                        <ListItem disablePadding key={item.text}>
-                                            <ListItemButton
-                                                component={Link}
-                                                href={item.href}
-                                                selected={isActive}
-                                                sx={{
-                                                    borderRadius: 2,
-                                                    mx: 1,
-                                                    my: 0.3,
-                                                    '&:hover': {
-                                                        backgroundColor: 'rgba(25,118,210,0.08)',
-                                                        transform: 'translateX(3px)',
-                                                        transition: '0.25s',
-                                                    },
-                                                    ...(isActive && {
-                                                        backgroundColor: 'rgba(25,118,210,0.12)',
-                                                        fontWeight: 600,
-                                                    }),
-                                                }}
-                                            >
-                                                <ListItemIcon
-                                                    sx={{
-                                                        color: isActive ? 'primary.main' : 'text.secondary',
-                                                        minWidth: 40,
-                                                    }}
-                                                >
-                                                    {item.icon}
-                                                </ListItemIcon>
-                                                <ListItemText
-                                                    primary={item.text}
-                                                    sx={{
-                                                        fontWeight: isActive ? 600 : 400,
-                                                        color: isActive ? 'primary.main' : 'text.primary',
-                                                    }}
-                                                />
-                                            </ListItemButton>
-                                        </ListItem>
-                                    );
-                                })}
-                            </List>
-                            {index < menuItems.length - 1 && <Divider sx={{ my: 2 }} />}
-                        </Box>
-                    ))}
+                        flexShrink: 0,
+                        '& .MuiDrawer-paper': {
+                            width: drawerWidth,
+                            boxSizing: 'border-box',
+                            borderRight: '1px solid #eee',
+                        },
+                    }}
+                >
+                    {drawerContent}
+                </Drawer>
+            )}
 
-                    <Divider sx={{ my: 2 }} />
-
-                    {menuLiked.map((section, index) => (
-                        <Box key={index}>
-                            <Typography
-                                variant="h6"
-                                fontWeight={500}
-                                fontSize="14px"
-                                fontFamily="Inter"
-                                my={2}
-                                ml={2}
-                            >
-                                {section.title}
-                            </Typography>
-                            <List>
-                                {section.items.map((item) => {
-                                    return (
-                                        <ListItem disablePadding key={item.text}>
-                                            <ListItemButton
-                                                sx={{
-                                                    borderRadius: 2,
-                                                    mx: 1,
-                                                    my: 0.3,
-                                                    '&:hover': {
-                                                        backgroundColor: 'rgba(25,118,210,0.08)',
-                                                        transform: 'translateX(3px)',
-                                                        transition: '0.25s',
-                                                    },
-                                                }}
-                                            >
-                                                <ListItemIcon
-                                                    sx={{
-                                                        minWidth: 40,
-                                                    }}
-                                                >
-                                                    {item.icon}
-                                                </ListItemIcon>
-                                                <ListItemText
-                                                    primary={item.text}
-                                                />
-                                            </ListItemButton>
-                                        </ListItem>
-                                    );
-                                })}
-                            </List>
-                        </Box>
-                    ))}
-
-                    <Divider sx={{ my: 2 }} />
-                    <List>
-                        <ListItem disablePadding>
-                            <ListItemButton
-                                sx={{
-                                    mx: 1,
-                                    borderRadius: 2,
-                                    '&:hover': {
-                                        backgroundColor: 'rgba(244,67,54,0.1)',
-                                        transition: '0.25s',
-                                    },
-                                }}
-                            >
-                                <ListItemIcon>
-                                    <LogoutIcon color="error" />
-                                </ListItemIcon>
-                                <ListItemText
-                                    primary="Đăng xuất"
-                                    primaryTypographyProps={{ color: 'error.main', fontWeight: 500 }}
-                                    onClick={handleLogout}
-                                />
-                            </ListItemButton>
-                        </ListItem>
-                    </List>
-                </Box>
-            </Drawer>
-
-            {/* --- Nội dung chính --- */}
-            <Box component="main" sx={{ flexGrow: 1, p: 4 }}>
-                {/* Header */}
+            {/* ===== MAIN ===== */}
+            <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+                {/* HEADER */}
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <CartBreadcrumbs pathname={pathname} />
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        {isMobile && (
+                            <IconButton onClick={toggleDrawer}>
+                                <MenuIcon />
+                            </IconButton>
+                        )}
+                        <CartBreadcrumbs pathname={pathname} />
+                    </Box>
+
                     {data?.display_name && (
                         <Box
                             sx={{ display: 'flex', alignItems: 'center', gap: 2, cursor: 'pointer' }}
@@ -256,9 +251,7 @@ export default function CheckLayout({ children }: { children: React.ReactNode })
                                 height={38}
                                 style={{ borderRadius: '50%', objectFit: 'cover' }}
                             />
-                            <Typography sx={{ fontFamily: 'SVN-Gilroy', fontWeight: 600, fontSize: '16px' }}>
-                                {data?.display_name}
-                            </Typography>
+                            <Typography fontWeight={600}>{data?.display_name}</Typography>
                             <ArrowDropDownIcon />
                         </Box>
                     )}
@@ -266,7 +259,6 @@ export default function CheckLayout({ children }: { children: React.ReactNode })
 
                 <Divider sx={{ my: 3 }} />
 
-                {/* Nội dung trang */}
                 {children}
             </Box>
 

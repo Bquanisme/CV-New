@@ -14,7 +14,7 @@ import HomeEatingPlace from "./home.eatingPlace";
 export default function Home() {
   return (
     <Box sx={{ bgcolor: '#D9D9D9', display: 'flex', flexDirection: 'column', gap: 10 }}>
-      <Box sx={{ position: "relative", width: "100%", height: "755px" }}>
+      <Box sx={{ position: "relative", width: "100%", height: { xs: 350, md: 605, sm: 400} }}>
         <Image
           src={Banner}
           alt="Header"

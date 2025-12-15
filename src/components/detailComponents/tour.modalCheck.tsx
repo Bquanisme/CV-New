@@ -20,6 +20,7 @@ import { TransitionProps } from "@mui/material/transitions";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { orderTour } from "@/redux/Slice/userSlice";
 import { toast } from "react-toastify";
+import { useQueryClient } from "@tanstack/react-query";
 const Transition = React.forwardRef(function Transition(
     props: TransitionProps & { children: React.ReactElement },
     ref: React.Ref<unknown>
@@ -46,15 +47,21 @@ type IProps = {
 export default function TourModalCheck({ check, handleCloseCheck, id }: IProps) {
     const dispatch = useAppDispatch();
     const { user } = useAppSelector(state => state.auth)
+    const queryClient = useQueryClient();
 
     const handleBookingTiket = async () => {
         try {
-            const res = await dispatch(
+            await dispatch(
                 orderTour({
                     id_room: id,
                     id_user: user?.id,
                 })
             );
+
+            queryClient.invalidateQueries({
+                queryKey: ["orders", user?.id],
+            });
+
             toast.success("🎉 Đặt vé thành công!", { theme: "colored" });
         } catch (err: any) {
             toast.error(err.message || "Có lỗi xảy ra!", { theme: "colored" });

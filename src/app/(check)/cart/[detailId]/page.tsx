@@ -4,7 +4,7 @@ import React from "react";
 import DetailCartUI from "./detailCartUI";
 import { useQuery } from "@tanstack/react-query";
 import { fetchDetailOrder } from "@/api/home/api.home";
-import CircularProgressLoading from "@/components/circularProgress.loading";
+import CircularProgressLoading from "@/components/otherComponents/circularProgress.loading";
 
 const DetailTour = () => {
     const { detailId } = useParams();
@@ -17,7 +17,7 @@ const DetailTour = () => {
         refetchOnWindowFocus: true,
     });
 
-    if (isLoading) return <CircularProgressLoading/>
+    if (isLoading) return <CircularProgressLoading />
 
     return (
         <div>

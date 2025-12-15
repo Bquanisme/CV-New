@@ -1,5 +1,5 @@
 'use client';
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   CircularProgress,
@@ -15,12 +15,12 @@ import TourismMenuSelect from '@/components/tourismComponents/tourism.menuSelect
 import SearchIcon from '@mui/icons-material/Search';
 
 export default function CartPage() {
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
-  const [search, setSearch] = useState<string>("");
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
+  const [search, setSearch] = useState('');
 
-  const { user } = useAppSelector(state => state.auth)
+  const { user } = useAppSelector((state) => state.auth);
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, refetch } = useQuery({
     queryKey: ['orders', user?.id],
     queryFn: () => fetchOrder(),
     enabled: !!user,
@@ -40,8 +40,8 @@ export default function CartPage() {
           gap: 2,
         }}
       >
-        <CircularProgress size={45} thickness={4} color="primary" />
-        <Typography variant="body1" color="text.secondary">
+        <CircularProgress size={45} thickness={4} />
+        <Typography color="text.secondary">
           Đang tải lịch sử đơn hàng...
         </Typography>
       </Box>
@@ -56,8 +56,8 @@ export default function CartPage() {
 
   if (!orders.length) {
     return (
-      <Box sx={{ textAlign: 'center', mt: 5, color: 'text.secondary' }}>
-        <Typography variant="h6" fontWeight={500}>
+      <Box sx={{ textAlign: 'center', mt: 6 }}>
+        <Typography variant="h6" color="text.secondary">
           Bạn chưa có đơn hàng nào.
         </Typography>
       </Box>
@@ -65,55 +65,83 @@ export default function CartPage() {
   }
 
   const term = search.toLowerCase();
-
-  const filteredOrders = orders.filter((order: any) => {
-    if (!term) return true;
-    const name = order?.name?.toLowerCase() || '';
-    const code = order?.code?.toLowerCase() || '';
-    return name.includes(term) || code.includes(term);
-  });
-
-  filteredOrders.sort((a: any, b: any) =>
-    sortOrder === 'asc' ? a.cost - b.cost : b.cost - a.cost
-  );
-
+  const filteredOrders = orders
+    .filter((order: any) => {
+      if (!term) return true;
+      return (
+        order?.name?.toLowerCase().includes(term) ||
+        order?.code?.toLowerCase().includes(term)
+      );
+    })
+    .sort((a: any, b: any) =>
+      sortOrder === 'asc' ? a.cost - b.cost : b.cost - a.cost
+    );
 
   return (
-    <Box component="main" sx={{ flexGrow: 1, p: 4 }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Typography fontFamily='Inter' fontWeight='700' fontSize='30px' sx={{ color: '#3C3C3C', mb: 1 }}>Lịch sử đơn hàng</Typography>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-          <Box>
-            <TextField
-              placeholder="Bạn có thể tìm kiếm theo tên đơn hàng"
-              size="small"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              sx={{
-                width: 350,
-                backgroundColor: '#fff',
+    <Box
+      component="main"
+      sx={{
+        flexGrow: 1,
+        px: { xs: 2, sm: 3, md: 4 },
+        py: { xs: 2, md: 3 },
+      }}
+    >
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: { xs: 'column', md: 'row' },
+          justifyContent: 'space-between',
+          alignItems: { xs: 'flex-start', md: 'center' },
+          gap: { xs: 2, md: 0 },
+          mb: 3,
+        }}
+      >
+        <Typography
+          fontFamily="Inter"
+          fontWeight={700}
+          fontSize={{ xs: 22, sm: 26, md: 30 }}
+          color="#3C3C3C"
+        >
+          Lịch sử đơn hàng
+        </Typography>
+
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: { xs: 'column', sm: 'row' },
+            alignItems: 'center',
+            gap: 2,
+            width: { xs: '100%', md: 'auto' },
+          }}
+        >
+          <TextField
+            placeholder="Tìm theo tên hoặc mã đơn hàng"
+            size="small"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            sx={{
+              width: { xs: '100%', sm: 280, md: 350 },
+              backgroundColor: '#fff',
+              borderRadius: 2,
+              '& .MuiOutlinedInput-root': {
                 borderRadius: 2,
-                '& .MuiOutlinedInput-root': {
-                  borderRadius: 2,
-                },
-              }}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <SearchIcon color="action" />
-                  </InputAdornment>
-                ),
-              }}
-            />
-          </Box>
-          <Box>
-            <TourismMenuSelect
-              setSortOrder={setSortOrder}
-            />
-          </Box>
+              },
+            }}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon color="action" />
+                </InputAdornment>
+              ),
+            }}
+          />
+
+          <TourismMenuSelect setSortOrder={setSortOrder} />
         </Box>
       </Box>
-      <BoxHistory orders={filteredOrders} />
+
+      {/* LIST */}
+      <BoxHistory orders={filteredOrders} refetchOrders={refetch} />
     </Box>
   );
 }

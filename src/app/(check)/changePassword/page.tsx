@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import {
     Box,
     Typography,
@@ -15,19 +15,12 @@ import { Formik, Form, Field } from 'formik'
 import * as Yup from 'yup'
 import { toast } from 'react-toastify'
 import { useAppDispatch, useAppSelector } from '@/redux/hooks'
-// import { useQueryClient } from '@tanstack/react-query'
 import { editPassword } from '@/redux/Slice/userSlice'
 import Link from 'next/link'
 
 const ChangeUserSchema = Yup.object().shape({
-    password: Yup.string()
-        .required('Vui lòng nhập mật khẩu hiện tại!'),
-
-    newPassword: Yup.string()
-        .required('Vui lòng nhập mật khẩu mới!')
-        .min(6, 'Phải có ít nhất 6 ký tự')
-        .max(20, 'Chỉ được tối đa 20 ký tự'),
-
+    password: Yup.string().required('Vui lòng nhập mật khẩu hiện tại!'),
+    newPassword: Yup.string().required('Vui lòng nhập mật khẩu mới!').min(6).max(20),
     confirmPassword: Yup.string()
         .oneOf([Yup.ref('newPassword')], 'Mật khẩu xác nhận không trùng khớp!')
         .required('Vui lòng xác nhận mật khẩu!'),
@@ -37,25 +30,24 @@ const ChangePassword = () => {
     const { user } = useAppSelector(state => state.auth)
     const dispatch = useAppDispatch()
 
-    const [initialValues, setInitialValues] = useState({
+    const [initialValues] = useState({
         password: '',
         newPassword: '',
         confirmPassword: '',
     })
 
     return (
-        <Box sx={{ width: '100%', bgcolor: '#FFFFFF', borderRadius: '10px', py: 4 }}>
-            <Box sx={{ px: 5, display: 'flex', flexDirection: 'column', gap: 1 }}>
-                <Typography sx={{ fontFamily: 'Inter', fontWeight: 700, fontSize: '30px', color: '#3C3C3C' }}>
+        <Box sx={{ width: '100%', bgcolor: '#fff', borderRadius: '10px', py: 4 }}>
+            <Box sx={{ px: { xs: 2, md: 5 } }}>
+                <Typography fontSize={{ xs: 22, md: 30 }} fontWeight={700}>
                     Đổi mật khẩu
                 </Typography>
-                <Typography sx={{ fontFamily: 'Inter', fontWeight: 400, fontSize: '15px', color: '#000', mb: 2 }}>
-                    Để bảo mật tài khoản, vui lòng không chia sẻ mật khẩu cho người khác
+                <Typography fontSize={15} mb={2}>
+                    Để bảo mật tài khoản, vui lòng không chia sẻ mật khẩu
                 </Typography>
                 <Divider sx={{ mb: 3 }} />
 
                 <Formik
-                    enableReinitialize
                     initialValues={initialValues}
                     validationSchema={ChangeUserSchema}
                     onSubmit={async (values, { setSubmitting }) => {
@@ -68,11 +60,10 @@ const ChangePassword = () => {
                                         newPassword: values.newPassword,
                                     },
                                 })
-                            ).unwrap();
-                            toast.success('✅ Cập nhật thông tin thành công!', { theme: 'colored' })
-                        } catch (err: any) {
-                            toast.error(err || 'Có lỗi xảy ra!', { theme: 'colored' })
-                            console.log(err)
+                            ).unwrap()
+                            toast.success('Đổi mật khẩu thành công!')
+                        } catch (e: any) {
+                            toast.error(e)
                         } finally {
                             setSubmitting(false)
                         }
@@ -80,117 +71,150 @@ const ChangePassword = () => {
                 >
                     {({ values, errors, touched, handleChange, isSubmitting }) => (
                         <Form>
-                            <Table sx={{ width: '100%', maxWidth: 800, mx: 'auto' }}>
-                                <TableBody>
+                            <Box
+                                sx={{
+                                    display: { xs: 'flex', md: 'none' },
+                                    flexDirection: 'column',
+                                    gap: 3,
+                                }}
+                            >
+                                <Box>
+                                    <Typography mb={1}>Mật khẩu hiện tại</Typography>
+                                    <Field
+                                        as={TextField}
+                                        fullWidth
+                                        type="password"
+                                        name="password"
+                                        value={values.password}
+                                        onChange={handleChange}
+                                        error={touched.password && Boolean(errors.password)}
+                                        helperText={touched.password && errors.password}
+                                    />
+                                    <Box textAlign="right" mt={1}>
+                                        <Link href="/" style={{ color: '#0A599A' }}>
+                                            Quên mật khẩu?
+                                        </Link>
+                                    </Box>
+                                </Box>
 
-                                    <TableRow>
-                                        <TableCell sx={{ width: 220, border: 'none' }}>
-                                            <Typography sx={{ fontWeight: 500, fontSize: '16px', color: '#000' }}>
+                                <Box>
+                                    <Typography mb={1}>Mật khẩu mới</Typography>
+                                    <Field
+                                        as={TextField}
+                                        fullWidth
+                                        type="password"
+                                        name="newPassword"
+                                        value={values.newPassword}
+                                        onChange={handleChange}
+                                        error={touched.newPassword && Boolean(errors.newPassword)}
+                                        helperText={touched.newPassword && errors.newPassword}
+                                    />
+                                </Box>
+
+                                <Box>
+                                    <Typography mb={1}>Xác nhận mật khẩu</Typography>
+                                    <Field
+                                        as={TextField}
+                                        fullWidth
+                                        type="password"
+                                        name="confirmPassword"
+                                        value={values.confirmPassword}
+                                        onChange={handleChange}
+                                        error={touched.confirmPassword && Boolean(errors.confirmPassword)}
+                                        helperText={touched.confirmPassword && errors.confirmPassword}
+                                    />
+                                </Box>
+
+                                <Button
+                                    fullWidth
+                                    type="submit"
+                                    variant="contained"
+                                    disabled={isSubmitting}
+                                    sx={{
+                                        bgcolor: '#E54141',
+                                        height: 48,
+                                        borderRadius: '10px',
+                                    }}
+                                >
+                                    Xác nhận
+                                </Button>
+                            </Box>
+
+                            <Box sx={{ display: { xs: 'none', md: 'block' } }}>
+                                <Table sx={{ width: '100%', maxWidth: 800, mx: 'auto' }}>
+                                    <TableBody>
+
+                                        <TableRow>
+                                            <TableCell width={220}>
                                                 Mật khẩu hiện tại
-                                            </Typography>
-                                        </TableCell>
-                                        <TableCell sx={{ border: 'none' }}>
-                                            <Field
-                                                as={TextField}
-                                                fullWidth
-                                                name="password"
-                                                placeholder="Nhập mật khẩu hiện tại"
-                                                type="password"
-                                                value={values.password}
-                                                onChange={handleChange}
-                                                error={touched.password && Boolean(errors.password)}
-                                                helperText={touched.password && errors.password}
-                                            />
-                                        </TableCell>
-                                        <TableCell sx={{ width: 150, border: 'none', textAlign: 'right' }}>
-                                            <Link
-                                                href="/"
-                                                style={{
-                                                    fontWeight: 500,
-                                                    fontSize: '15px',
-                                                    fontFamily: 'Inter',
-                                                    color: '#0A599A',
-                                                    textDecoration: 'none',
-                                                }}
-                                            >
-                                                Quên mật khẩu?
-                                            </Link>
-                                        </TableCell>
-                                    </TableRow>
+                                            </TableCell>
+                                            <TableCell >
+                                                <Field
+                                                    as={TextField}
+                                                    fullWidth
+                                                    type="password"
+                                                    name="password"
+                                                    value={values.password}
+                                                    onChange={handleChange}
+                                                />
+                                            </TableCell>
+                                            <TableCell align="right">
+                                                <Link href="/" style={{ color: '#0A599A' }}>
+                                                    Quên mật khẩu?
+                                                </Link>
+                                            </TableCell>
+                                        </TableRow>
 
-                                    <TableRow>
-                                        <TableCell sx={{ border: 'none' }}>
-                                            <Typography sx={{ fontWeight: 500, fontSize: '16px', color: '#000' }}>
-                                                Mật khẩu mới
-                                            </Typography>
-                                        </TableCell>
-                                        <TableCell sx={{ border: 'none' }} colSpan={2}>
-                                            <Field
-                                                as={TextField}
-                                                fullWidth
-                                                name="newPassword"
-                                                placeholder="Nhập mật khẩu mới"
-                                                type="password"
-                                                value={values.newPassword}
-                                                onChange={handleChange}
-                                                error={touched.newPassword && Boolean(errors.newPassword)}
-                                                helperText={touched.newPassword && errors.newPassword}
-                                            />
-                                        </TableCell>
-                                    </TableRow>
+                                        <TableRow>
+                                            <TableCell>Mật khẩu mới</TableCell>
+                                            <TableCell colSpan={2}>
+                                                <Field
+                                                    as={TextField}
+                                                    fullWidth
+                                                    type="password"
+                                                    name="newPassword"
+                                                    value={values.newPassword}
+                                                    onChange={handleChange}
+                                                />
+                                            </TableCell>
+                                        </TableRow>
 
-                                    <TableRow>
-                                        <TableCell sx={{ border: 'none' }}>
-                                            <Typography sx={{ fontWeight: 500, fontSize: '16px', color: '#000' }}>
-                                                Xác nhận mật khẩu
-                                            </Typography>
-                                        </TableCell>
-                                        <TableCell sx={{ border: 'none' }} colSpan={2}>
-                                            <Field
-                                                as={TextField}
-                                                fullWidth
-                                                name="confirmPassword"
-                                                placeholder="Nhập lại mật khẩu mới"
-                                                type="password"
-                                                value={values.confirmPassword}
-                                                onChange={handleChange}
-                                                error={touched.confirmPassword && Boolean(errors.confirmPassword)}
-                                                helperText={touched.confirmPassword && errors.confirmPassword}
-                                            />
-                                        </TableCell>
-                                    </TableRow>
-                                    <TableRow>
-                                        <TableCell sx={{ border: 'none' }}>
-                                        </TableCell>
-                                        <TableCell sx={{ border: 'none' }} colSpan={2}>
-                                            <Box sx={{ width: '100%', mt: 5 }}>
+                                        <TableRow>
+                                            <TableCell >Xác nhận mật khẩu</TableCell>
+                                            <TableCell colSpan={2}>
+                                                <Field
+                                                    as={TextField}
+                                                    fullWidth
+                                                    type="password"
+                                                    name="confirmPassword"
+                                                    value={values.confirmPassword}
+                                                    onChange={handleChange}
+                                                />
+                                            </TableCell>
+                                        </TableRow>
+
+                                        <TableRow>
+                                            <TableCell />
+                                            <TableCell colSpan={2} >
                                                 <Button
-                                                    variant="contained"
                                                     type="submit"
+                                                    variant="contained"
                                                     disabled={isSubmitting}
                                                     sx={{
                                                         bgcolor: '#E54141',
-                                                        color: 'white',
-                                                        height: 50,
-                                                        borderRadius: '10px',
-                                                        textTransform: 'none',
-                                                        fontWeight: 600,
-                                                        fontSize: '16px',
                                                         width: 150,
-                                                        '&:hover': {
-                                                            bgcolor: '#7e1f10ff',
-                                                            transform: 'scale(1.02)',
-                                                            transition: '0.2s',
-                                                        },
+                                                        height: 48,
+                                                        borderRadius: '10px',
                                                     }}
                                                 >
                                                     Xác nhận
                                                 </Button>
-                                            </Box>
-                                        </TableCell>
-                                    </TableRow>
-                                </TableBody>
-                            </Table>
+                                            </TableCell>
+                                        </TableRow>
+
+                                    </TableBody>
+                                </Table>
+                            </Box>
 
                         </Form>
                     )}

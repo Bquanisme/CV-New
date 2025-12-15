@@ -11,7 +11,7 @@ import {
   import { styled } from "@mui/material/styles";
   import CloseIcon from "@mui/icons-material/Close";
 import Image from "next/image";
-import ContactImage from "../assets/contact.jpg";
+import ContactImage from "../../assets/contact.jpg";
 import PhoneInTalkIcon from '@mui/icons-material/PhoneInTalk';
 import LanguageIcon from '@mui/icons-material/Language';
 

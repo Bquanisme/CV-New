@@ -4,11 +4,13 @@ import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import authReducer from "./Slice/authSlice";
 import userReducer from "./Slice/userSlice";
+import adminReducer from "./Slice/adminSlice";
 
 // Gộp reducer
 const rootReducer = combineReducers({
   auth: authReducer,
   user: userReducer,
+  admin: adminReducer,
 });
 
 // Cấu hình redux-persist

@@ -22,7 +22,7 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import Image from "next/image";
-import LoginImage from "../assets/loginImage.jpg";
+import LoginImage from "../../assets/loginImage.jpg";
 import { admin, login } from "@/redux/Slice/authSlice";
 import { useAppDispatch } from "@/redux/hooks";
 import { toast } from "react-toastify";
@@ -129,12 +129,12 @@ export default function HomeLogin({ open, handleClose, handleClickOpenRegister }
                     if (values.email.startsWith("admin")) {
                       res = await dispatch(admin({ email: values.email, password: values.password }));
                       console.log("LocalStorage role:", localStorage.getItem("role"));
+                      console.log('==>', res)
                     } else {
                       res = await dispatch(login({ email: values.email, password: values.password, device_token: "xxx111xxx" }));
                       console.log("LocalStorage role:", localStorage.getItem("role"));
                     }
 
-                    // Lấy role từ payload
                     if (res && (res.payload?.role === "admin" || res.payload?.role === "user")) {
                       role = res.payload.role;
                     }
@@ -144,13 +144,11 @@ export default function HomeLogin({ open, handleClose, handleClickOpenRegister }
                       return;
                     }
 
-                    // Success toast + close modal
                     toast.success("🎉 Đăng nhập thành công!", { theme: "colored" });
                     handleClose();
 
-                    // Redirect theo role
-                    if (role === "admin") router.replace("/dashboard");
-                    else router.replace("/");
+                    if (role === "admin") router.push("/dashboard");
+                    else router.push("/");
 
                   } catch (err: any) {
                     toast.error(err.message || "Có lỗi xảy ra!", { theme: "colored" });
@@ -172,6 +170,7 @@ export default function HomeLogin({ open, handleClose, handleClickOpenRegister }
                       onChange={handleChange}
                       error={touched.email && Boolean(errors.email)}
                       helperText={touched.email && errors.email}
+
                     />
 
                     {/* Password */}

@@ -26,29 +26,32 @@ export default function AppFooter() {
         pb: 3,
       }}
     >
-
       <Box
         sx={{
-          maxWidth: "1800px",     
-          mx: "auto",             
-          px: { xs: 3, md: 6 },  
+          maxWidth: "1500px",
+          mx: "auto",
+          px: { xs: 3, md: 6 },
         }}
       >
+
         <Box
           sx={{
             display: "flex",
             flexDirection: { xs: "column", md: "row" },
             justifyContent: "space-between",
-            alignItems: "center",
+            alignItems: { xs: "flex-start", md: "center" },
             mb: 4,
-            gap: { xs: 3, md: 4 },
+            gap: { xs: 4, md: 3 },
           }}
         >
+
           {/* Logo + text */}
-          <Box display="flex" alignItems="center" gap={1}>
-            <Image src={Footer} alt="Footer Logo" width={78} height={78} />
+          <Box display="flex" alignItems="center" gap={2}>
+            <Image src={Footer} alt="Footer Logo" width={70} height={70}
+              style={{ borderRadius: 8 }}
+            />
             <Box>
-              <Typography sx={{ fontWeight: 600, fontSize: "16px" }}>
+              <Typography sx={{ fontWeight: 600, fontSize: "15px" }}>
                 SỞ DU LỊCH TỈNH KHÁNH HÒA
               </Typography>
               <Typography sx={{ fontWeight: 700, fontSize: "16px" }}>
@@ -57,7 +60,14 @@ export default function AppFooter() {
             </Box>
           </Box>
 
-          <Box display="flex" gap={20} alignItems="center">
+          <Box
+            sx={{
+              display: "flex",
+              flexWrap: "wrap",
+              gap: { xs: 3, md: 10 },
+              alignItems: "center"
+            }}
+          >
             <Box display="flex" alignItems="center" gap={1}>
               <Box
                 sx={{
@@ -65,7 +75,6 @@ export default function AppFooter() {
                   height: 48,
                   borderRadius: "50%",
                   bgcolor: '#045398',
-                  border: "2px solid #045398",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -89,7 +98,6 @@ export default function AppFooter() {
                   height: 48,
                   borderRadius: "50%",
                   bgcolor: '#045398',
-                  border: "2px solid #045398",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -107,116 +115,117 @@ export default function AppFooter() {
 
             {/* Social */}
             <Box sx={{ display: "flex", gap: 2 }}>
-              <FacebookIcon fontSize="large" sx={{color: '#1877f2', borderRadius: '50%'}} />
+              <FacebookIcon fontSize="large" sx={{ color: '#1877f2' }} />
               <GitHubIcon fontSize="large" />
-              <YouTubeIcon fontSize="large" color='error'/>
-              <InstagramIcon fontSize="large" sx={{color: '#e1306c'}}/>
+              <YouTubeIcon fontSize="large" color='error' />
+              <InstagramIcon fontSize="large" sx={{ color: '#e1306c' }} />
             </Box>
           </Box>
+
         </Box>
 
-        <Divider 
-          sx={{ 
-            borderColor: "rgba(255,255,255,0.2)", 
-            my: 3,                                
-          }} 
+        {/* Divider */}
+        <Divider
+          sx={{
+            borderColor: "rgba(255,255,255,0.2)",
+            my: 3,
+          }}
         />
 
         <Box
           sx={{
             display: "flex",
-            flexDirection: { xs: "column", md: "row" },
-            justifyContent: "space-between",   
-            alignItems: "flex-start",   
-            gap: '20%'
+            flexDirection: { xs: "column", lg: "row" },
+            justifyContent: "space-between",
+            gap: { xs: 5, lg: "15%" },
           }}
         >
-          {/* Cột trái */}
-          <Box sx={{ flex: 1, minWidth: 300, maxWidth: 400 }}>
-            <Typography mb={2} sx={{ fontSize: "14px" }}>
+
+          <Box sx={{ flex: 1, minWidth: 280 }}>
+            <Typography mb={2} sx={{ fontSize: "14px", opacity: 0.9 }}>
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus
-              vel consectetur ipsum, eu sodales odio. Etiam porttitor mauris sed
-              odio interdum hendrerit. Nunc tempus, ipsum eget placerat mollis,
-              ante arcu euismod mi, at laoreet leo magna id lacus.
+              vel consectetur ipsum, eu sodales odio.
             </Typography>
 
             <Typography
               sx={{
-                color: "#FFFFFF",
                 fontWeight: 500,
                 fontSize: "16px",
                 mb: 2,
                 cursor: "pointer",
+                "&:hover": { color: "#90caf9" }
               }}
             >
               Xem thêm
             </Typography>
 
-            <Box display="flex" gap={2}>
-              <Image src={Thongbao} alt="Đã thông báo" width={141} height={53} />
-              <Image src={Dangky} alt="Đã đăng ký" width={141} height={53} />
+            <Box display="flex" gap={2} flexWrap="wrap">
+              <Image src={Thongbao} alt="Đã thông báo" width={135} height={52} />
+              <Image src={Dangky} alt="Đã đăng ký" width={135} height={52} />
             </Box>
 
             <Typography
               mt={2}
-              sx={{ fontWeight: 400, fontSize: "14px", textAlign: "left" }}
+              sx={{
+                fontSize: "13px",
+                opacity: 0.8
+              }}
             >
               © 2000-2021, All Rights Reserved
             </Typography>
           </Box>
 
-          {/* Menu 4 cột */}
           <Box
             sx={{
               flex: 2,
-              display: "flex",
-              justifyContent: "space-between",   // căn menu giữa
-              alignItems: "flex-start",   // giữ thẳng hàng trên cùng
-              flexWrap: "wrap",
-              gap: 10,
+              display: "grid",
+              gridTemplateColumns: {
+                xs: "1fr 1fr",
+                sm: "1fr 1fr 1fr",
+                md: "repeat(4, 1fr)"
+              },
+              gap: { xs: 4, md: 6 },
             }}
           >
+            {/* Column 1 */}
             <Box>
-              <Typography fontWeight="bold" mb={2}>
-                Điểm đến
-              </Typography>
-              <Typography sx={{ fontWeight: 400, fontSize: "14px", mb: 1 }}>Điểm du lịch</Typography>
-              <Typography sx={{ fontWeight: 400, fontSize: "14px", mb: 1 }}>Ẩm thực</Typography>
-              <Typography sx={{ fontWeight: 400, fontSize: "14px", mb: 1 }}>Lưu trú</Typography>
-              <Typography sx={{ fontWeight: 400, fontSize: "14px", mb: 1 }}>Mua sắm</Typography>
-              <Typography sx={{ fontWeight: 400, fontSize: "14px", mb: 1 }}>Giải trí</Typography>
-              <Typography sx={{ fontWeight: 400, fontSize: "14px", mb: 1 }}>Tour</Typography>
+              <Typography fontWeight="bold" mb={2}>Điểm đến</Typography>
+              <Typography sx={{ fontSize: 14, mb: 1 }}>Điểm du lịch</Typography>
+              <Typography sx={{ fontSize: 14, mb: 1 }}>Ẩm thực</Typography>
+              <Typography sx={{ fontSize: 14, mb: 1 }}>Lưu trú</Typography>
+              <Typography sx={{ fontSize: 14, mb: 1 }}>Mua sắm</Typography>
+              <Typography sx={{ fontSize: 14, mb: 1 }}>Giải trí</Typography>
+              <Typography sx={{ fontSize: 14, mb: 1 }}>Tour</Typography>
             </Box>
 
+            {/* Column 2 */}
             <Box>
-              <Typography fontWeight="bold" mb={2}>
-                Dịch vụ
-              </Typography>
-              <Typography  sx={{ fontWeight: 400, fontSize: "14px", mb: 1 }}>Phương tiện di lại</Typography>
-              <Typography  sx={{ fontWeight: 400, fontSize: "14px", mb: 1 }}>Công ty lữ hành</Typography>
-              <Typography  sx={{ fontWeight: 400, fontSize: "14px", mb: 1 }}>Ngân hàng</Typography>
+              <Typography fontWeight="bold" mb={2}>Dịch vụ</Typography>
+              <Typography sx={{ fontSize: 14, mb: 1 }}>Phương tiện di lại</Typography>
+              <Typography sx={{ fontSize: 14, mb: 1 }}>Công ty lữ hành</Typography>
+              <Typography sx={{ fontSize: 14, mb: 1 }}>Ngân hàng</Typography>
             </Box>
 
+            {/* Column 3 */}
             <Box>
-              <Typography fontWeight="bold" mb={2}>
-                Trợ giúp
-              </Typography>
-              <Typography  sx={{ fontWeight: 400, fontSize: "14px", mb: 1 }}>Hỗ trợ du lịch</Typography>
-              <Typography  sx={{ fontWeight: 400, fontSize: "14px", mb: 1 }}>Giao thông</Typography>
-              <Typography  sx={{ fontWeight: 400, fontSize: "14px", mb: 1 }}>Thời tiết</Typography>
+              <Typography fontWeight="bold" mb={2}>Trợ giúp</Typography>
+              <Typography sx={{ fontSize: 14, mb: 1 }}>Hỗ trợ du lịch</Typography>
+              <Typography sx={{ fontSize: 14, mb: 1 }}>Giao thông</Typography>
+              <Typography sx={{ fontSize: 14, mb: 1 }}>Thời tiết</Typography>
             </Box>
 
+            {/* Column 4 */}
             <Box>
-              <Typography fontWeight="bold" mb={1}>
-                Khám phá ứng dụng
-              </Typography>
-              <Box display="flex" gap={1}>
-                <Image src={AppStore} alt="App Store" width={93} height={35} />
-                <Image src={ChPlay} alt="Google Play" width={93} height={35} />
+              <Typography fontWeight="bold" mb={1}>Khám phá ứng dụng</Typography>
+              <Box display="flex" gap={1} flexWrap="wrap">
+                <Image src={AppStore} alt="App Store" width={90} height={34} />
+                <Image src={ChPlay} alt="Google Play" width={90} height={34} />
               </Box>
             </Box>
+
           </Box>
         </Box>
+
       </Box>
     </Box>
   );

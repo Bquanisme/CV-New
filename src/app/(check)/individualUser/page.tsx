@@ -15,7 +15,7 @@ import avatarLogo from '../../../assets/avatarLogo.jpg'
 import { useAppDispatch, useAppSelector } from '@/redux/hooks'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { IUser } from '@/typescript/home'
-import CircularProgressLoading from '@/components/circularProgress.loading'
+import CircularProgressLoading from '@/components/otherComponents/circularProgress.loading'
 import { editUser } from '@/redux/Slice/userSlice'
 import { fetchHeaderUser } from '@/api/home/api.home'
 
@@ -76,14 +76,47 @@ const IndividualUser = () => {
     }
 
     return (
-        <Box sx={{ width: '100%', height: 574, bgcolor: '#FFFFFF', borderRadius: '10px' }}>
-            <Box sx={{ p: 3, px: 5, display: 'flex', flexDirection: 'column', gap: 1 }}>
-                <Typography sx={{ fontFamily: 'Inter', fontWeight: 700, fontSize: '30px', color: '#3C3C3C' }}>
+        <Box
+            sx={{
+                width: '100%',
+                bgcolor: '#FFFFFF',
+                borderRadius: '10px',
+                minHeight: { md: 574 },
+            }}
+        >
+            <Box
+                sx={{
+                    p: { xs: 2, md: 3 },
+                    px: { xs: 2, md: 5 },
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: 1,
+                }}
+            >
+                {/* Title */}
+                <Typography
+                    sx={{
+                        fontFamily: 'Inter',
+                        fontWeight: 700,
+                        fontSize: { xs: '22px', md: '30px' },
+                        color: '#3C3C3C',
+                    }}
+                >
                     Thông tin cá nhân
                 </Typography>
-                <Typography sx={{ fontFamily: 'Inter', fontWeight: 400, fontSize: '15px', color: '#000', mb: 2 }}>
+
+                <Typography
+                    sx={{
+                        fontFamily: 'Inter',
+                        fontWeight: 400,
+                        fontSize: '15px',
+                        color: '#000',
+                        mb: 2,
+                    }}
+                >
                     Quản lý thông tin hồ sơ để bảo mật tài khoản
                 </Typography>
+
                 <Divider sx={{ mb: 3 }} />
 
                 <Formik
@@ -92,13 +125,14 @@ const IndividualUser = () => {
                     validationSchema={ChangeUserSchema}
                     onSubmit={async (values, { setSubmitting }) => {
                         try {
-                            const formData = new FormData()
-                            formData.append('display_name', values.display_name)
-                            formData.append('phone_number', values.phone_number)
-                            formData.append('detail_address', values.detail_address)
-                            formData.append('image_delete', values.image_delete ? 'true' : 'false')
+                            const formData = new FormData();
+                            formData.append('display_name', values.display_name);
+                            formData.append('phone_number', values.phone_number);
+                            formData.append('detail_address', values.detail_address);
+                            formData.append('image_delete', values.image_delete ? 'true' : 'false');
+
                             if (values.image_data.length > 0) {
-                                formData.append('image_data', values.image_data[0])
+                                formData.append('image_data', values.image_data[0]);
                             }
 
                             await dispatch(
@@ -106,29 +140,50 @@ const IndividualUser = () => {
                                     id: Number(user?.id),
                                     formData,
                                 })
-                            )
+                            );
+
                             if (user?.id) {
                                 queryClient.invalidateQueries({
                                     queryKey: ['headerUser', user.id],
                                 });
-                            } //Recall API react-query v4
+                            }
 
-                            toast.success('✅ Cập nhật thông tin thành công!', { theme: 'colored' })
+                            toast.success('✅ Cập nhật thông tin thành công!', { theme: 'colored' });
                         } catch (err: any) {
-                            toast.error(err.message || 'Có lỗi xảy ra!', { theme: 'colored' })
+                            toast.error(err.message || 'Có lỗi xảy ra!', { theme: 'colored' });
                         } finally {
-                            setSubmitting(false)
+                            setSubmitting(false);
                         }
                     }}
                 >
-                    {({ values, errors, touched, handleChange, setFieldValue, isSubmitting }) => (
+                    {({
+                        values,
+                        errors,
+                        touched,
+                        handleChange,
+                        setFieldValue,
+                        isSubmitting,
+                    }) => (
                         <Form>
-                            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                                
-                                <Box sx={{ flex: 1 }}>
-                                    <Box sx={{ display: 'flex', gap: 2 }}>
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    flexDirection: { xs: 'column', md: 'row' },
+                                    gap: { xs: 4, md: 0 },
+                                }}
+                            >
+                                <Box sx={{ flex: 1, width: '100%' }}>
+                                    <Box
+                                        sx={{
+                                            display: 'flex',
+                                            flexDirection: { xs: 'column', md: 'row' },
+                                            gap: 2,
+                                        }}
+                                    >
                                         <Box sx={{ flex: 1 }}>
-                                            <Typography sx={{ fontWeight: 500, fontSize: '15px', fontFamily: 'Inter' }}>Tài khoản</Typography>
+                                            <Typography fontWeight={500} fontSize="15px" fontFamily="Inter">
+                                                Tài khoản
+                                            </Typography>
                                             <Field
                                                 as={TextField}
                                                 fullWidth
@@ -141,22 +196,41 @@ const IndividualUser = () => {
                                                 helperText={touched.display_name && errors.display_name}
                                             />
                                         </Box>
+
                                         <Box sx={{ flex: 1 }}>
-                                            <Typography sx={{ fontWeight: 500, fontSize: '15px', fontFamily: 'Inter' }}>Email</Typography>
+                                            <Typography fontWeight={500} fontSize="15px" fontFamily="Inter">
+                                                Email
+                                            </Typography>
                                             <Field
                                                 as={TextField}
                                                 fullWidth
                                                 margin="normal"
                                                 name="email"
                                                 value={values.email}
-                                                InputProps={{ readOnly: true, style: { backgroundColor: '#f5f5f5', color: '#777' } }}
+                                                InputProps={{
+                                                    readOnly: true,
+                                                    style: {
+                                                        backgroundColor: '#f5f5f5',
+                                                        color: '#777',
+                                                    },
+                                                }}
                                             />
                                         </Box>
                                     </Box>
 
-                                    <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
+                                    {/* Phone + Address */}
+                                    <Box
+                                        sx={{
+                                            display: 'flex',
+                                            flexDirection: { xs: 'column', md: 'row' },
+                                            gap: 2,
+                                            mt: 2,
+                                        }}
+                                    >
                                         <Box sx={{ flex: 1 }}>
-                                            <Typography sx={{ fontWeight: 500, fontSize: '15px', fontFamily: 'Inter' }}>Số điện thoại</Typography>
+                                            <Typography fontWeight={500} fontSize="15px" fontFamily="Inter">
+                                                Số điện thoại
+                                            </Typography>
                                             <Field
                                                 as={TextField}
                                                 fullWidth
@@ -169,8 +243,11 @@ const IndividualUser = () => {
                                                 helperText={touched.phone_number && errors.phone_number}
                                             />
                                         </Box>
+
                                         <Box sx={{ flex: 1 }}>
-                                            <Typography sx={{ fontWeight: 500, fontSize: '15px', fontFamily: 'Inter' }}>Địa chỉ</Typography>
+                                            <Typography fontWeight={500} fontSize="15px" fontFamily="Inter">
+                                                Địa chỉ
+                                            </Typography>
                                             <Field
                                                 as={TextField}
                                                 fullWidth
@@ -185,6 +262,7 @@ const IndividualUser = () => {
                                         </Box>
                                     </Box>
 
+                                    {/* Submit */}
                                     <Button
                                         variant="contained"
                                         type="submit"
@@ -198,23 +276,43 @@ const IndividualUser = () => {
                                             textTransform: 'none',
                                             fontWeight: 600,
                                             fontSize: '16px',
-                                            width: '100%',
-                                            maxWidth: 231,
-                                            '&:hover': { bgcolor: '#7e1f10ff', transform: 'scale(1.02)', transition: '0.2s' },
+                                            width: { xs: '100%', sm: 231 },
+                                            maxWidth: '100%',
+                                            '&:hover': {
+                                                bgcolor: '#7e1f10ff',
+                                                transform: 'scale(1.02)',
+                                                transition: '0.2s',
+                                            },
                                         }}
                                     >
                                         Xác nhận
                                     </Button>
                                 </Box>
 
-                                {/* Right side: avatar */}
-                                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, alignItems: 'center', ml: 4 }}>
+                                {/* RIGHT: AVATAR */}
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        gap: 2,
+                                        alignItems: 'center',
+                                        ml: { md: 4 },
+                                        order: { xs: -1, md: 0 },
+                                    }}
+                                >
                                     <Image
                                         src={values.previewImage || avatarLogo}
-                                        width={236}
-                                        height={236}
                                         alt="Avatar user"
-                                        style={{ objectFit: 'cover', borderRadius: '50%', border: '2px solid #ddd' }}
+                                        width={200}
+                                        height={230}
+                                        style={{
+                                            width: '100%',
+                                            maxWidth: 236,
+                                            aspectRatio: '1 / 1',
+                                            objectFit: 'cover',
+                                            borderRadius: '50%',
+                                            border: '2px solid #ddd',
+                                        }}
                                     />
 
                                     <input
@@ -222,24 +320,47 @@ const IndividualUser = () => {
                                         type="file"
                                         accept="image/*"
                                         style={{ display: 'none' }}
-                                        onChange={e => {
-                                            const file = e.currentTarget.files?.[0]
-                                            if (file) handleAvatarChange(file, setFieldValue)
+                                        onChange={(e) => {
+                                            const file = e.currentTarget.files?.[0];
+                                            if (file) handleAvatarChange(file, setFieldValue);
                                         }}
                                     />
+
                                     <Button
                                         variant="outlined"
                                         component="label"
                                         htmlFor="upload-avatar"
-                                        sx={{ borderRadius: '8px', textTransform: 'none', fontWeight: 500, px: 3, py: 1, color: 'red' }}
+                                        sx={{
+                                            borderRadius: '8px',
+                                            textTransform: 'none',
+                                            fontWeight: 500,
+                                            px: 3,
+                                            py: 1,
+                                            color: 'red',
+                                        }}
                                     >
                                         Đổi avatar
                                     </Button>
 
-                                    <Typography sx={{ width: 232, textAlign: 'center', color: '#343538', fontFamily: 'Inter', fontSize: 15 }}>
+                                    <Typography
+                                        sx={{
+                                            width: 232,
+                                            textAlign: 'center',
+                                            fontFamily: 'Inter',
+                                            fontSize: 15,
+                                        }}
+                                    >
                                         Dung lượng file tối đa 1 MB
                                     </Typography>
-                                    <Typography sx={{ width: 232, textAlign: 'center', color: '#343538', fontFamily: 'Inter', fontSize: 15, mt: -1 }}>
+                                    <Typography
+                                        sx={{
+                                            width: 232,
+                                            textAlign: 'center',
+                                            fontFamily: 'Inter',
+                                            fontSize: 15,
+                                            mt: -1,
+                                        }}
+                                    >
                                         Định dạng: .JPEG, .PNG
                                     </Typography>
                                 </Box>
@@ -249,7 +370,8 @@ const IndividualUser = () => {
                 </Formik>
             </Box>
         </Box>
-    )
+    );
+
 }
 
 export default IndividualUser
