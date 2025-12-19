@@ -22,7 +22,7 @@ import Drawer from "@mui/material/Drawer";
 const AppHeader = () => {
   const pathname = usePathname();
   const id = useAppSelector((state) => state.auth?.user?.id);
-
+  
   const [contact, setContact] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [openRegister, setOpenRegister] = React.useState(false);

@@ -1,7 +1,9 @@
+import { logout } from '@/redux/Slice/authSlice';
+import { store } from '@/redux/store';
 import axios from 'axios';
 
 const axiosClient = axios.create({
-  baseURL: 'http://127.0.0.1:8000/api', 
+  baseURL: 'http://127.0.0.1:8000/api',
 });
 
 axiosClient.interceptors.request.use((config) => {
@@ -16,7 +18,10 @@ axiosClient.interceptors.response.use(
   (res) => res.data,
   (error) => {
     if (error.response?.status === 401) {
-      localStorage.removeItem('token');
+      store.dispatch(logout());
+      // localStorage.removeItem('token');
+      // localStorage.removeItem('role');
+      // localStorage.removeItem('user-data');
       window.location.href = '/';
     }
     return Promise.reject(error);

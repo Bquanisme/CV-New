@@ -17,11 +17,13 @@ export function middleware(req: NextRequest) {
 
     // User cố vào admin
     if (pathname.startsWith("/dashboard") && role !== "admin") {
+        console.log('user')
         return NextResponse.redirect(new URL("/tour", req.url));
     }
 
     // Admin cố vào user
     if (userPages.some(p => pathname.startsWith(p)) && role !== "user") {
+        console.log('adminnn')
         return NextResponse.redirect(new URL("/dashboard", req.url));
     }
 

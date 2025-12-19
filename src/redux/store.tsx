@@ -20,10 +20,8 @@ const persistConfig = {
   whitelist: ["auth"],
 };
 
-// Tạo persistedReducer
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-// ✅ Tạo store chuẩn Redux Toolkit v2+
 export const store = configureStore({
   reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
